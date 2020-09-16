@@ -1,0 +1,7 @@
+Flask
+Flask-misaka
+#Flask-WTF
+#Flask-Login
+#Flask-mail
+python-dotenv
+pony

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+
+  <title>{%block title%}FlaskTemplate{%endblock%}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favico.png') }}" />
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+<a href="https://github.com/spseol/startflask/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+
+
+  <nav>
+  <p><img src="{{ url_for('static', filename='flask-icon.png') }}" /></p>
+  <ul>
+    <li><a href="{{ url_for('index') }}">Index</a></li>
+    <li><a href="{{ url_for('info') }}">Info</a></li>
+    <li><a href="{{ url_for('abc') }}">ABC</a></li>
+  </ul></nav>
+
+
+{% block obsah %}
+
+{% filter markdown %}
+
+# Flask
+
+Startovací šablona pro webový framework Flask.
+
+![Flaštička]({{ url_for('static', filename='flask.png') }})
+![Flaštičky]({{ url_for('static', filename='flasks.png') }})
+
+{% endfilter %}
+
+
+
+{% endblock obsah %}
+
+<footer>
+{% filter markdown %}
+Užitečné odkazy: 
+
+* <a href="https://www.jakpsatweb.cz/html/">HTML</a>, 
+* <a href="https://www.jakpsatweb.cz/css/">CSS</a>, 
+* <a href="http://docs.python.org">Python</a>, 
+* <a href="https://flask.palletsprojects.com/">Flask</a>, 
+* <a href="https://jinja.palletsprojects.com/templates/">Jinja2</a>
+
+{% endfilter %}
+</footer>
+
+
+
+
+</body>
+</html>
