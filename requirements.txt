@@ -1,7 +1,8 @@
 Flask
 Flask-misaka
-#Flask-WTF
-#Flask-Login
+Flask-WTF
+Flask-Login
 #Flask-mail
 python-dotenv
-pony
+Flask-pony
+ldap3

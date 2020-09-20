@@ -1,7 +1,9 @@
 *.swp
 webface/*.sqlite
 */*.sqlite
+*.sqlite
 .vscode
+.sass-cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

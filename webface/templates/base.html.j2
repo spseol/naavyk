@@ -1,64 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
-<head>
+  {% if title %}
+    <title>naavyk: {{ title }}</title>
+  {% else %}
+    <title>naavyk</title>
+  {% endif %}
   <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="Marek">
+  {#<script src="{{ url_for('static', filename='jquery.js') }}"> </script>#}
+  <!-- http://code.jquery.com/ -->
+  <script src="http://code.jquery.com/jquery-3.5.1.slim.min.js"
+          integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+          crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='juuu.js') }}"> </script>
 
-  <title>{%block title%}FlaskTemplate{%endblock%}</title>
+  <link rel="stylesheet"    
+        href="{{ url_for('static', filename='styles.css') }}">
+  {#<link rel="stylesheet"    #}
+  {#      href="{{ url_for('static', filename='pygments.css') }}">#}
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='logo-ico.png') }}" />
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favico.png') }}" />
-
-  <!--[if lt IE 9]>
+  <!--[if IE]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-
 </head>
 
 <body>
-<a href="https://github.com/spseol/startflask/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+{%block body%}
+{#https://www.w3schools.com/charsets/ref_utf_symbols.asp#}
+{#http://www.utf8-chartable.de/unicode-utf8-table.pl#}
+  <header>
+    <h1><a href="{{url_for('index')}}">
+      naavyk <img src="{{ url_for('static', filename='logo.png') }}"
+             width="177" height="139"
+             alt="logo:horník s vozíkem" /></a>
+    </h1>
+    <nav id="topnav">
+      <ul>
+        <li><a href="{{url_for('login')}}" title="Odhlásit se!" 
+               class="logout">LogIn</a></li>
+        <li><a href="{{url_for('logout')}}"
+               title="Odhlásit se!"
+               class="logout">{{current_user.login}}<br />
+               LogOut</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    
+{#{% if current_user.is_authenticated %}#}
+{#<p>#}
+{#<strong>uživatel:</strong> {{ current_user.name }}, #}
+{#<strong>role:</strong> {{ current_user.role_name }}#}
+{#</p>#}
+{#{% endif %}#}
 
 
-  <nav>
-  <p><img src="{{ url_for('static', filename='flask-icon.png') }}" /></p>
-  <ul>
-    <li><a href="{{ url_for('index') }}">Index</a></li>
-    <li><a href="{{ url_for('info') }}">Info</a></li>
-    <li><a href="{{ url_for('abc') }}">ABC</a></li>
-  </ul></nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="messages">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
 
-{% block obsah %}
-
-{% filter markdown %}
-
-# Flask
-
-Startovací šablona pro webový framework Flask.
-
-![Flaštička]({{ url_for('static', filename='flask.png') }})
-![Flaštičky]({{ url_for('static', filename='flasks.png') }})
-
-{% endfilter %}
+    <article>
 
 
+    {%block content%}
 
-{% endblock obsah %}
-
-<footer>
-{% filter markdown %}
-Užitečné odkazy: 
-
-* <a href="https://www.jakpsatweb.cz/html/">HTML</a>, 
-* <a href="https://www.jakpsatweb.cz/css/">CSS</a>, 
-* <a href="http://docs.python.org">Python</a>, 
-* <a href="https://flask.palletsprojects.com/">Flask</a>, 
-* <a href="https://jinja.palletsprojects.com/templates/">Jinja2</a>
-
-{% endfilter %}
-</footer>
+    Toto je obsah
 
 
+    {%endblock content%}
 
-
+		</article>
+	
+	</main>
+  <footer>
+  <p>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </p>
+  <p id="marek">Vytvořil 
+  <a href="http://marrek.cz/">Marrek Nožka</a> pro radost sobě 
+  a svým studentům.<br />
+  <a href="http://github.com/spseol/onoff">http://github.com/spseol/naavyk</a>
+  </p>
+  </footer>
+{%endblock body%}
 </body>
 </html>

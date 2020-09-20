@@ -1,0 +1,337 @@
+/******************************************************************************
+*                          Other CSS files                                    *
+******************************************************************************/
+/*@import 'pygment.css';*/
+//@import 'typogrify.css';
+
+/******************************************************************************
+*                          reset nebo normalize                               *
+******************************************************************************/
+/*@import "normalize";*/
+@import "compass/reset";
+
+/******************************************************************************
+*                          Compass                                            *
+******************************************************************************/
+@import "compass/css3";
+@import "compass/css3/border-radius";
+@import "compass/typography/lists/horizontal-list";
+
+@import "fancy-buttons";
+/*fancy-button ( color, font-size, border-radius, border-size ) */
+
+
+/******************************************************************************
+*                          Fonts                                              *
+******************************************************************************/
+@import url(https://fonts.googleapis.com/css?family=Bree+Serif&subset=latin,latin-ext);
+@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic&subset=latin,latin-ext);
+
+$font_text: 'Lora', Georgia, "DejaVu Serif", serif;
+$font_nadpis: 'Bree serif', Georgia, "Times New Roman", "DejaVu Serif", serif;
+
+/******************************************************************************
+*                          Colors                                             *
+******************************************************************************/
+$oranzova: #EF6C00;
+$zelena:  #55AA55;
+$modra: #0431A1;
+$modra_s: #0648EE;
+$pisek: #EFA100;
+$seda: #f7f7f7;
+
+@import "color-schemer";
+$cs-primary: $zelena;
+$cs-scheme: 'accented-analogic';  // mono, complement, triad, tetrad, 
+                                  // analogic, accented-analogic
+$cs-hue-offset: 20;
+$cs-brightness-offset: 20;
+$cs-color-model: ryb;  // rgb, ryb
+
+/*@include cs-test(cs-primary() cs-secondary() cs-tertiary() );*/
+
+
+
+
+/******************************************************************************
+*                           Defaults                                          *
+******************************************************************************/
+$default-border-radius: 15px;
+$default-box-sizing: border-box;
+/******************************************************************************
+*                           Layout                                            *
+******************************************************************************/
+* {
+    @include box-sizing();
+}
+
+body {
+    margin-left: auto;
+    margin-right: auto;
+    font-family: $font_text;
+    font-size: 110%;
+    max-width: 60em;
+    line-height: normal;
+    padding: 0px 20px;
+}
+
+a {
+    color: cs-secondary();
+}
+a:hover {
+    color: cs-tertiary();
+}
+em {
+    font-variant: small-caps;
+}
+strong {
+   font-weight: bold;
+}
+
+p {
+    margin-top: 2ex;
+    margin-bottom: 2ex;
+}
+
+header {
+    display: flex;
+    h1 {
+        flex: 1;
+        font-size: 2.2em;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        a {
+            text-decoration: none;
+            /*border-right: solid 2px $oranzova;*/
+            /*border-bottom: solid 2px $oranzova;*/
+            padding: 0.5ex 1ex 0.5ex 0px;
+        }
+    }
+    nav {
+        flex: 2;
+        text-align: right;
+    }
+    ul {
+    }
+    li {
+        list-style-type: none;
+        display: inline;
+        margin: 1ex;
+
+        a {
+            display: inline-block;
+            font-size: 1.5em;
+            padding: 20px 22px 10px;
+            font-weight: bold;
+            color: cs-primary();
+            background-color: $seda;
+            text-decoration: none;
+        }
+        a:hover {
+            color: white;
+            background-color: cs-secondary();
+        }
+    }
+}
+
+main {
+        margin-top: 2rem;
+}
+
+
+
+#{headings(all)} {
+    /*font-family: $font_nadpis;*/
+    font-weight: bold;
+    color: cs-primary();
+    a {
+        color: cs-primary();
+    }
+    margin-top: 1em;
+    margin-bottom: 0.6ex;
+}
+
+h1 {
+    font-size: 2.6em;
+}
+h2 {
+    font-size: 2.1em;
+}
+h3 {
+    font-size: 1.7em;
+}
+h4 {
+    font-size: 1.3em;
+    color: cs-secondary()
+}
+h5 {
+    font-size: 1.15em;
+}
+h6 {
+    font-size: 1em;
+}
+
+li {
+    list-style-type: disc;
+    display: list-item;
+}
+
+dt {
+    font-weight: bold;
+}
+dd {
+    list-style-type: square;
+    display: list-item;
+}
+
+.login {
+    text-align: center;
+    table {
+        font-size: 120%;
+        margin-left: auto;
+        margin-right: auto;
+        tr {
+            td {
+                padding-bottom: 0.7ex;
+                vertical-align: bottom;
+            }
+            td:first-child {
+                text-align: right;
+                padding-right: 1ex;
+            }
+            td:last-child {
+                text-align: left;
+            }
+        }
+    }
+}
+
+.logout {
+    @include fancy-button(lighten(cs-tertiary(), 30), 25, 15px, 0px);
+    padding: 8px 10px;
+}
+
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
+.ok-field {
+    border: solid 3px green;
+}
+.error-field {
+    border: solid 3px red;
+}
+
+footer {
+    margin-top: 2.5em;
+}
+
+ul.messages {
+    padding: 0px;
+    li.error::before {
+        position: relative;
+        top: -1em;
+        left: -1em;
+        background-color: red;
+        color: white; 
+        font-weight: bold;
+        padding: 0.5ex;
+        content: "Chyba";
+        @include border-radius(10px);
+    }
+    li.error {
+        border: red solid 3px;
+    }
+    li {
+        padding: 1ex 1em;
+        list-style-type: none;
+        margin: 1ex 0px;
+        border: cs-secondary() solid 3px;
+        @include border-corner-radius(top, left, 40px);
+        @include border-corner-radius(top, right, 5px);
+        @include border-corner-radius(bottom, left, 15px);
+        @include border-corner-radius(bottom, right, 30px);
+    }
+}
+
+code {
+    font-family: monospace;
+}
+
+
+article {
+}
+
+#nav {
+    width: 15%;
+    max-width: 8em;
+    position: fixed;
+    button {
+        font-size: 90%;
+    }
+    overflow: auto;
+    max-height: 100%;
+}
+
+a.navlink {
+    display: inline-block;
+    width: 3ex;
+    text-decoration: none;
+    padding-left: auto;
+    padding-right: auto;
+    &:hover {
+        color: white;
+        background-color: darkorange;
+    }
+}
+
+#form {
+    width:75%;
+    margin-left: 24%;
+}
+
+footer {
+}
+
+
+.bar {
+    display: inline-block;
+    width: calc(100% / 70);
+    background-color: cs-secondary();
+    float: left;
+    border: white 1px solid;
+    transition: height 1.2s;
+    -webkit-transition: all 1200ms cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    -moz-transition: all 1200ms cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    -o-transition: all 1200ms cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    transition: all 1200ms cubic-bezier(0.850, 0.245, 0.130, 0.760); /* custom */
+
+    -webkit-transition-timing-function: cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    -moz-transition-timing-function: cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    -o-transition-timing-function: cubic-bezier(0.850, 0.245, 0.130, 0.760); 
+    transition-timing-function: cubic-bezier(0.850, 0.245, 0.130, 0.760); /* custom */
+}
+@for $i from 1 through 80 {
+    .bar:nth-child(#{$i}) {
+        height: 14 + random(111) + px
+    }
+}
+#marek {
+    text-align: center;
+    clear: both;
+}
+
+@media screen and (max-width: 790px) {
+.intro {
+    height: auto;
+    margin: 1em;
+}
+.global {
+    margin: 1em;
+}
+}
+/*-----------------------------------------------------------------------------
+vim:nowrap:
+*/

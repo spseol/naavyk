@@ -1,0 +1,59 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+
+    <div class="login">
+        <h2>Přihlášení</h2>
+        {% if "not current_user.is_authenticated "%}
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <table>
+                    <tr>
+                        <td>Jméno:</td>
+                        <td>
+                            {%- with -%}
+                                {%- if form.login.errors|count > 0 -%}
+                                    {%- set field_class = "error-field" -%}
+                                {%- else -%}
+                                    {%- set field_class = "ok" -%}
+                                {%- endif -%}
+                                {%- for error in form.login.errors -%}
+                                    <span style="color: red; font-size:80%;">{{ error }}</span><br/>
+                                {%- endfor -%}
+                                {{ form.login(size=20, class=field_class) }}
+                            {%- endwith -%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Heslo:</td>
+                        <td>
+                            {%- with -%}
+                                {%- if form.passwd.errors|count > 0 -%}
+                                    {%- set field_class = "error-field" -%}
+                                {%- else -%}
+                                    {%- set field_class = "ok" -%}
+                                {%- endif -%}
+                                {%- for error in form.passwd.errors -%}
+                                    <span style="color: red; font-size:80%;">{{ error }}</span><br/>
+                                {%- endfor -%}
+                                {{ form.passwd(size=20, class=field_class) }}
+                            {%- endwith -%}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Trvalé přihlášení?</td>
+                        <td>{{ form.remember_me }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Přihlásit"></td>
+                    </tr>
+                </table>
+            </form>
+        {%- else -%}
+            <p>Ty už jsi přihlášený!</p>
+            <p><a href="{{ url_for('logout') }}">Odhlásit</a></p>
+        {%- endif -%}
+    </div>
+
+{% endblock content %}
