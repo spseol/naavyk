@@ -159,7 +159,7 @@ def item():
             recommended=addform.recommended.data,
         )
         for gid in addform.groups.data:
-            item.groups += [Group[int(gid)]]
+            item.groups += [Group[gid]]
 
         flash("Nová položka byla vložena", "ok")
         return redirect(url_for("item"))
@@ -171,7 +171,7 @@ def item():
     return render_template("item.html.j2", groups=groups, addform=addform)
 
 
-@app.route("/group/<int:gid>", methods=["GET"])
+@app.route("/group/<uuid:gid>", methods=["GET"])
 @login_required
 @db_session
 def item_in_group(gid):
@@ -188,7 +188,7 @@ def item_in_group(gid):
         return abort(404)
 
 
-@app.route("/group/<int:gid>", methods=["POST"])
+@app.route("/group/<uuid:gid>", methods=["POST"])
 @login_required
 @db_session
 def item_in_group_POST(gid):
@@ -206,7 +206,7 @@ def item_in_group_POST(gid):
             return abort(404)
 
 
-@app.route("/order/<int:gid>", methods=["GET", "POST"])
+@app.route("/order/<uuid:gid>", methods=["GET", "POST"])
 @login_required
 @db_session
 def order(gid):
@@ -232,9 +232,10 @@ def order(gid):
         else:
             ItemOrder(order=order, item=item, count=count)
         return redirect(url_for("order", gid=gid))
-    items = list(current_user.orders.select(lambda o: o.group.id == gid))[
-        -1
-    ].items
+    # objednané položky
+    items = list(current_user.orders.select(lambda o: o.group.id == gid))
+    # je třeba ošetři případ, kdy ještě zatím není nic objednáno
+    items = items[-1].items if items else []
     counts = dict()
     for i in items:
         counts[i.item.id] = i.count
@@ -246,7 +247,7 @@ def order(gid):
 ############################################################################
 
 
-@app.route("/img/<int:iid>")
+@app.route("/img/<uuid:iid>")
 @login_required
 @db_session
 def img(iid):

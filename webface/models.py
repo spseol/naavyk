@@ -2,6 +2,7 @@
 from pony.orm import PrimaryKey, Required, Optional, Set
 from flask_login import UserMixin
 from pony.orm import db_session
+from uuid import UUID, uuid4
 
 # Import Flask-Pony instance from __init__.py module
 from . import pony, login_manager
@@ -14,14 +15,15 @@ db = pony.db
 @db_session
 def user_loader(user_id):
     try:
-        user = User[int(user_id)]
+        user = User[UUID(user_id)]
     except ValueError:
         user = None
     return user
 
 
 class User(UserMixin, db.Entity):
-    id = PrimaryKey(int, auto=True)
+    # id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, default=uuid4)
     login = Required(str)
     name = Required(str)
     classroom = Optional(str)
@@ -30,7 +32,8 @@ class User(UserMixin, db.Entity):
 
 
 class Item(db.Entity):
-    id = PrimaryKey(int, auto=True)
+    # id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, default=uuid4)
     name = Required(str)
     imgdata = Required(bytes)
     imgtype = Required(str)
@@ -44,7 +47,7 @@ class Item(db.Entity):
 
 
 class Group(db.Entity):
-    id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, default=uuid4)
     name = Required(str, unique=True)
     enable = Required(bool)
     description = Optional(str)
@@ -53,7 +56,8 @@ class Group(db.Entity):
 
 
 class Order(db.Entity):
-    id = PrimaryKey(int, auto=True)
+    # id = PrimaryKey(int, auto=True)
+    id = PrimaryKey(UUID, default=uuid4)
     user = Required(User)
     done = Required(bool)
     items = Set("ItemOrder")
