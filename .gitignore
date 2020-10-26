@@ -4,6 +4,7 @@ webface/*.sqlite
 *.sqlite
 .vscode
 .sass-cache/
+*.css.map
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,54 @@
+{% extends "base.html.j2" %}
+
+{%block content%}
+<h2>Položky</h2>
+
+Položky jsou třízeny  do těchto skupin:
+
+<ul class="groups-list">
+{%- for g in groups %}
+  <li><a href="{{ url_for('item_in_group', gid=g.id) }}">{{g.name}}</a></li>
+{%- endfor %}
+</ul>
+
+<h3>Nová položka</h3>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ addform.csrf_token }}
+    <p>Název:<br />
+    {{addform.name(size=20) }} 
+    </p>
+    <p>Obrázek: (JPEG, PNG, GIF, SVG)<br />
+    {%- if addform.imgdata.errors|count > 0 -%}
+        {%- set field_class = "error-field" -%}
+    {%- else -%}
+        {%- set field_class = "ok" -%}
+    {%- endif -%}
+    {{ addform.imgdata(class=field_class) }}
+    </p>
+    <p>Popis:<br />
+    {{ addform.description(cols=40, rows=4) }}</p> 
+    {%- if addform.url.errors|count > 0 -%}
+        {%- set field_class = "error-field" -%}
+    {%- else -%}
+        {%- set field_class = "ok" -%}
+    {%- endif -%}
+    <p>Adresa:<br />
+    {{ addform.url(size=40, class=field_class) }}</p> 
+    <p>Cena:<br />
+    {{ addform.price(size=10, type="number") }} Kč 
+    {{ addform.necessary() }} {{addform.necessary.label("Nutné") }}
+    {{ addform.recommended() }} {{addform.recommended.label("Doporučené")}}</p>
+    <p>Skupina (minimálně jedna):<br />
+    {% for g in addform.groups  %}
+      {{g}} {{g.label}}
+    {% endfor %}
+    </p>
+    {{ addform.submit(value='Přidat položku') }}</p> 
+
+
+</form>
+
+
+{%endblock content%}
+

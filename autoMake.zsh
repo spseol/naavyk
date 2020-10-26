@@ -29,7 +29,7 @@ fi
 radek=0
 while true; do
     radek=$[ $radek + 1 ]
-    notify=$(inotifywait -r -e modify . --exclude '^\..+\.swp$|^\..+\.log$|.idea')
+    notify=$(inotifywait -r -e modify . --exclude '^\..+\.swp$|^\..+\.log$|\.idea|\.sqlite')
     echo $notify
     if echo $notify | grep styles.scss ; then
         echo "-->" scss --compass styles.scss $interface/static/styles.css

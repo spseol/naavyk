@@ -13,6 +13,8 @@
   <script src="http://code.jquery.com/jquery-3.5.1.slim.min.js"
           integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
           crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='medium-zoom.min.js') }}"> </script>
+  {#<script src="{{ url_for('static', filename='intense.min.js') }}"> </script>#}
   <script src="{{ url_for('static', filename='juuu.js') }}"> </script>
 
   <link rel="stylesheet"    
@@ -35,18 +37,27 @@
     <h1><a href="{{url_for('index')}}">
       naavyk <img src="{{ url_for('static', filename='logo.png') }}"
              width="177" height="139"
-             alt="logo:horník s vozíkem" /></a>
+                         alt="logo:horník s vozíkem" /></a>
+      <br /><span id="podtext">... nákup pro výuku</span>
     </h1>
     <nav id="topnav">
       <ul>
-        <li><a href="{{url_for('login')}}" title="Odhlásit se!" 
-               class="logout">LogIn</a></li>
+
+        <li><a href="{{url_for('index')}}">Objednávka</a></li>
+        {%- if current_user.is_authenticated %}
+          {%- if current_user.admin %}
+          <li><a href="{{url_for('item')}}" class="admin">Položka</a></li>
+          <li><a href="{{url_for('group')}}" class="admin">Skupina</a></li>
+          {%- endif %}
         <li><a href="{{url_for('logout')}}"
                title="Odhlásit se!"
-               class="logout">{{current_user.login}}<br />
+               class="logout">{{current_user.name}}
+                              {{current_user.classroom}}<br />
                LogOut</a></li>
+        {%- endif %}
       </ul>
     </nav>
+
   </header>
 
   <main>
@@ -76,7 +87,15 @@
 
     {%block content%}
 
-    Toto je obsah
+    <h2>Objednávka</h2>
+
+    <p>Objednávat můžete v těchto skupinách:</p>
+    <ul id="groupsel">
+    {% for g in groups  %}
+    <li><a href="{{ url_for('order', gid=g.id) }}">{{ g.name }}<br />
+        <span class="description">{{ g.description }}</span></a></li>
+    {% endfor %}
+    </ul>
 
 
     {%endblock content%}
@@ -85,7 +104,7 @@
 	
 	</main>
   <footer>
-  <p>
+  <p id="bar">
     <span class="bar"></span>
     <span class="bar"></span>
     <span class="bar"></span>
@@ -157,7 +176,8 @@
     <span class="bar"></span>
     <span class="bar"></span>
   </p>
-  <p id="marek">Vytvořil 
+
+  <p id="author">Vytvořil 
   <a href="http://marrek.cz/">Marrek Nožka</a> pro radost sobě 
   a svým studentům.<br />
   <a href="http://github.com/spseol/onoff">http://github.com/spseol/naavyk</a>

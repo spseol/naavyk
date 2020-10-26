@@ -1,0 +1,43 @@
+{% extends "base.html.j2" %}
+
+
+{%block content%}
+<h2><small>Objednávka pro skupinu:</small> {{group.name}}</h2>
+<p>{{ group.description }}</p>
+<section class="item-list">
+    {% for item in group.items.order_by(Item.name) %}
+    <form method="post">
+      {{ form.csrf_token }}
+      {{ form.iid(value=item.id) }}
+    <h3>{{item.name}}</h3>
+    <section class="item-item-1">
+      <p class="item-img">
+        <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
+      </p>
+      <p class="item-dsc">{{ item.description }}</p>
+      <ul>
+        {% if item.necessary %}
+          <li class="necessary">Nezbytný</li>
+        {% endif %}
+        {% if item.recommended %}
+          <li class="recommended">Doporučený</li>
+        {% endif %}
+        <li><strong>{{ item.price }}</strong>,- Kč</li>
+        <li>Počet:<br />
+          {{ form.count(type="number", value=counts.get(item.id) or 0, min=0, max=777, 
+                        style="width: 4em;") }}
+        </li>
+        <li>{{ form.update() }}<li>
+      </ul>
+    </section>    
+    <section class=item-item-2>    
+      <p>Cena: <strong>{{ item.price }}</strong>,- Kč</p>
+      <p>{% if item.url %}Adresa: <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
+      {% endif %}
+      </p>
+      </section>    
+      <hr />
+    </form>
+    {% endfor %}
+</section>    
+{%endblock content%}

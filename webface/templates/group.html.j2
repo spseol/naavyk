@@ -1,0 +1,38 @@
+{% extends "base.html.j2" %}
+
+{%block content%}
+<h2>Skupiny</h2>
+
+<dl class="groups">
+{%- for g in groups %}
+<form method="POST">
+  <dl class="group group-{{'enable' if g.enable else 'disable'}}">
+    <dt>{{g.name}} <a href="{{ url_for('item_in_group', gid=g.id) }}">🚀</a></dt>
+    {%- if g.description  %}
+    <dd>{{g.description}}</dd>
+    {%- endif %}
+    {{edform.csrf_token}}
+    {{edform.group_id(value=g.id)}}
+    {{edform.enable}}
+    {{edform.disable}}
+    {{edform.remove}}
+  </dl>
+</form>
+{%- endfor %}
+</dl>
+
+<h3>Přidat skupinu</h3>
+
+<form method="POST">
+    {{ addform.csrf_token }}
+    <p>Název:<br />
+    {{addform.name(size=20) }} </p>
+    <p>Popis:<br />
+    {{ addform.description(cols=40, rows=4) }}</p> 
+
+    <p> {{addform.submit(value="Přidat skupinu")}}</p>
+</form>
+
+
+
+{%endblock content%}
