@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_pony import Pony
 from flask_login import LoginManager
-from flask_misaka import Misaka
+# from flask_misaka import Misaka
 from flask_wtf.csrf import CSRFProtect
 from flask_uuid import FlaskUUID
 from pony.orm import set_sql_debug
@@ -17,7 +17,7 @@ login_manager.login_view = "login"  # funkce pro url_for
 login_manager.login_message = "Nejprve je třeba se přihlásit :-)"
 # login_manager.session_protection = "strong"
 
-misaka = Misaka(app)
+# misaka = Misaka(app)
 csrf = CSRFProtect(app)
 flaskuuid = FlaskUUID(app)
 

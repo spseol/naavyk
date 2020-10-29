@@ -21,6 +21,7 @@ from .forms import (
 from .models import User, Group, Item, Order, ItemOrder, Classroom
 from pony.orm import db_session, ObjectNotFound
 from ldap3 import Server, Connection, ALL, NTLM
+from unicodedata import normalize
 
 
 @app.route("/", methods=["GET"])
@@ -43,7 +44,8 @@ def login():
         login = form.login.data
         passwd = form.passwd.data
 
-        server = Server("pdc.spseol.cz", get_info=ALL)
+        # server = Server("pdc.spseol.cz", get_info=ALL)
+        server = Server("172.24.1.1", get_info=ALL)
         conn = Connection(
             server,
             user="spseol.cz\\{}".format(login),
@@ -66,7 +68,7 @@ def login():
                 classname = "XxX"
             name = conn.entries[-1].cn.value
             user = User.get(login=login)
-            admin = login == "nozka"
+            admin = login in ("nozka", "dudka", "pospisil")
             classroom = Classroom.get(name=classname) or Classroom(
                 name=classname
             )
@@ -299,7 +301,8 @@ def img(iid):
         "Content-Disposition",
         "inline",
         filename="{}.{}".format(
-            item.name.replace(" ", "_"), item.imgtype.replace("/", ".")
+            normalize('NFKD', item.name.replace(" ", "_")).encode('latin-1', 'ignore')
+            , item.imgtype.replace("/", ".")
         )
         # "Content-Disposition", "attachment", filename="%s.jpg" % _id
     )
