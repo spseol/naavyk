@@ -95,7 +95,15 @@ class ItemForm(FlaskForm):
         "description", validators=[optional(), length(max=777)]
     )
     url = StringField("url", validators=[MaybeURL()])
-    price = IntegerField("price", validators=[InputRequired()])
+    price = IntegerField(
+        "price",
+        validators=[
+            InputRequired(),
+            NumberRange(
+                min=0, max=777, message="Zadej číslo v intervalu 0 až 777"
+            ),
+        ],
+    )
     necessary = BooleanField("necessary", default=False)
     recommended = BooleanField("recommended", default=False)
     # groups = FieldList(FormField(CheckBox))

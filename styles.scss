@@ -75,9 +75,11 @@ body {
     padding: 0px 20px;
 }
 
-textarea, input[type="text"] {
+textarea, input {
     font-family: $font_text;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    margin-top: 0.5ex;
+    margin-bottom: 0.5ex;
 }
 
 a {

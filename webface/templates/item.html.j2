@@ -36,7 +36,7 @@ Položky jsou třízeny  do těchto skupin:
     <p>Adresa:<br />
     {{ addform.url(size=40, class=field_class) }}</p> 
     <p>Cena:<br />
-    {{ addform.price(type="number", style="width: 5em;") }} Kč 
+    {{ addform.price(type="number", min=1, max=7777, style="width: 5em;") }} Kč 
     {{ addform.necessary() }} {{addform.necessary.label("Nutné") }}
     {{ addform.recommended() }} {{addform.recommended.label("Doporučené")}}</p>
     <p>Skupina (minimálně jedna):<br />

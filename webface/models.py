@@ -16,6 +16,7 @@ db = pony.db
 def user_loader(user_id):
     try:
         user = User[UUID(user_id)]
+        user.classname = user.classroom.name
     except ValueError:
         user = None
     return user
@@ -26,9 +27,15 @@ class User(UserMixin, db.Entity):
     id = PrimaryKey(UUID, default=uuid4)
     login = Required(str)
     name = Required(str)
-    classroom = Optional(str)
+    classroom = Required("Classroom")
     admin = Required(bool)
     orders = Set("Order")
+
+
+class Classroom(db.Entity):
+    id = PrimaryKey(UUID, default=uuid4)
+    name = Required(str, unique=True)
+    users = Set(User)
 
 
 class Item(db.Entity):

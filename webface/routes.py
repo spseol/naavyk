@@ -18,7 +18,7 @@ from .forms import (
     ItemOperation,
     OrderForm,
 )
-from .models import User, Group, Item, Order, ItemOrder
+from .models import User, Group, Item, Order, ItemOrder, Classroom
 from pony.orm import db_session, ObjectNotFound
 from ldap3 import Server, Connection, ALL, NTLM
 
@@ -61,12 +61,15 @@ def login():
                 conn.entries[-1].distinguishedName.value.upper(),
             )
             if m:
-                classroom = m.groups(1)
+                classname = m.groups(1)
             else:
-                classroom = "XxX"
+                classname = "XxX"
             name = conn.entries[-1].cn.value
             user = User.get(login=login)
             admin = login == "nozka"
+            classroom = Classroom.get(name=classname) or Classroom(
+                name=classname
+            )
             if user:
                 user.name = name
                 user.classroom = classroom
@@ -75,7 +78,9 @@ def login():
                 user = User(
                     login=login, name=name, admin=admin, classroom=classroom
                 )
-                user = User.get(login=login)
+                user = User.get(
+                    login=login
+                )  # nevím přesně proč, ale tohle je potřeba udělat
             login_user(user, remember=form.remember_me.data)
             flash("Právě jsi se přihlásil!")
             next_ = request.args.get("next")

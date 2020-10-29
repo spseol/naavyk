@@ -20,7 +20,8 @@
                                 {%- for error in form.login.errors -%}
                                     <span style="color: red; font-size:80%;">{{ error }}</span><br/>
                                 {%- endfor -%}
-                                {{ form.login(size=20, class=field_class) }}
+                                {{ form.login(size=20, class=field_class, placeholder="zax54321") }}@spseol.cz
+
                             {%- endwith -%}
                         </td>
                     </tr>
@@ -36,14 +37,14 @@
                                 {%- for error in form.passwd.errors -%}
                                     <span style="color: red; font-size:80%;">{{ error }}</span><br/>
                                 {%- endfor -%}
-                                {{ form.passwd(size=20, class=field_class) }}
+                                {{ form.passwd(size=20, class=field_class, placeholder="t0p7cret") }}
                             {%- endwith -%}
                         </td>
                     </tr>
-                    <tr>
-                        <td>Trvalé přihlášení?</td>
-                        <td>{{ form.remember_me }}</td>
-                    </tr>
+                    {#<tr>#}
+                    {#    <td>Trvalé přihlášení?</td>#}
+                    {#    <td>{{ form.remember_me }}</td>#}
+                    {#</tr>#}
                     <tr>
                         <td></td>
                         <td><input type="submit" value="Přihlásit"></td>
@@ -57,3 +58,7 @@
     </div>
 
 {% endblock content %}
+
+{# ----------------------------------------------------------------------------
+vim:ft=html.jinja
+#}
