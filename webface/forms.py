@@ -146,3 +146,7 @@ class OrderForm(FlaskForm):
         ],
     )
     update = SubmitField("Aktualizovat")
+
+    # def __init__(self, *args, **kwargs):
+    #     self.iid.type = False
+    #     self.count.type = False

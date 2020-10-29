@@ -10,7 +10,7 @@ $( document ).ready(function() {
     //var elements = document.querySelectorAll( 'img' );
 	//Intense( elements );
 
-    mediumZoom('.zoomable');
+    mediumZoom('.zoomable', {background: '#55aa92',});
 
 });
 

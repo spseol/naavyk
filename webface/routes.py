@@ -244,7 +244,43 @@ def order(gid):
     )
 
 
+@app.route("/orderAJAX/<uuid:gid>", methods=["POST"])
+@login_required
+@db_session
+def orderAJAX(gid):
+    try:
+        group = Group[gid]
+    except ObjectNotFound:
+        return abort(404)
+
+    form = OrderForm()
+    if form.validate_on_submit():
+        count = form.count.data
+        try:
+            item = Item[form.iid.data]
+            user = User[current_user.id]
+        except ObjectNotFound:
+            return abort(404)
+        order = Order.get(user=user, group=group) or Order(
+            user=user, group=group, done=False
+        )
+        item_order = ItemOrder.get(order=order, item=item)
+        if item_order:
+            item_order.count = count
+        else:
+            ItemOrder(order=order, item=item, count=count)
+        return str(count)
+    else:
+        return abort(405)
+
+
 ############################################################################
+
+
+@app.route("/myajax.js")
+def myajaxjs():
+    gid = request.args.get("gid")
+    return render_template("myajax.js", gid=gid)
 
 
 @app.route("/img/<uuid:iid>")
