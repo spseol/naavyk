@@ -72,7 +72,8 @@ class GroupForm(FlaskForm):
 
 
 class GroupEdit(FlaskForm):
-    group_id = HiddenField("group_id", validators=[InputRequired()])
+    # group_id = HiddenField("group_id", validators=[DataRequired()])
+    group_id = HiddenField("group_id")
     enable = SubmitField("Povolit")
     disable = SubmitField("Zakázat")
     remove = SubmitField("Smazat")
@@ -130,12 +131,14 @@ class ItemForm(FlaskForm):
 
 
 class ItemOperation(FlaskForm):
-    iid = HiddenField("iid", validators=[InputRequired()])
+    # iid = HiddenField("iid", validators=[InputRequired()])
+    iid = HiddenField("iid")
     remove = SubmitField("Smazat")
 
 
 class OrderForm(FlaskForm):
-    iid = HiddenField("iid", validators=[InputRequired()])
+    # iid = HiddenField("iid", validators=[InputRequired()])
+    iid = HiddenField("iid")
     count = IntegerField(
         "count",
         validators=[

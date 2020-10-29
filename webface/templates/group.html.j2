@@ -3,7 +3,7 @@
 {%block content%}
 <h2>Skupiny</h2>
 
-<dl class="groups">
+<div class="groups">
 {%- for g in groups %}
 <form method="POST">
   <dl class="group group-{{'enable' if g.enable else 'disable'}}">
@@ -11,15 +11,17 @@
     {%- if g.description  %}
     <dd>{{g.description}}</dd>
     {%- endif %}
-    {{edform.csrf_token}}
-    {{edform.group_id(value=g.id)}}
-    {{edform.enable}}
-    {{edform.disable}}
-    {{edform.remove}}
+    <dd>
+      {{edform.csrf_token(id=False)}}
+      {{edform.group_id(value=g.id, id=False)}}
+      {{edform.enable(id=False)}}
+      {{edform.disable(id=False)}}
+      {{edform.remove(id=False)}}
+    </dd>
   </dl>
 </form>
 {%- endfor %}
-</dl>
+</div>
 
 <h3>Přidat skupinu</h3>
 

@@ -16,7 +16,7 @@ Položky jsou třízeny  do těchto skupin:
 <form method="POST" enctype="multipart/form-data">
     {{ addform.csrf_token }}
     <p>Název:<br />
-    {{addform.name(size=20) }} 
+    {{addform.name(size=40) }} 
     </p>
     <p>Obrázek: (JPEG, PNG, GIF, SVG)<br />
     {%- if addform.imgdata.errors|count > 0 -%}
@@ -36,7 +36,7 @@ Položky jsou třízeny  do těchto skupin:
     <p>Adresa:<br />
     {{ addform.url(size=40, class=field_class) }}</p> 
     <p>Cena:<br />
-    {{ addform.price(size=10, type="number") }} Kč 
+    {{ addform.price(type="number", style="width: 5em;") }} Kč 
     {{ addform.necessary() }} {{addform.necessary.label("Nutné") }}
     {{ addform.recommended() }} {{addform.recommended.label("Doporučené")}}</p>
     <p>Skupina (minimálně jedna):<br />
@@ -44,7 +44,7 @@ Položky jsou třízeny  do těchto skupin:
       {{g}} {{g.label}}
     {% endfor %}
     </p>
-    {{ addform.submit(value='Přidat položku') }}</p> 
+    <p>{{ addform.submit(value='Přidat položku') }}</p> 
 
 
 </form>

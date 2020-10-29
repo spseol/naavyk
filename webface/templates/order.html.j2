@@ -1,5 +1,8 @@
 {% extends "base.html.j2" %}
 
+{% block head %}
+<script src="{{ url_for('myajaxjs', gid=group.id) }}"> </script>
+{% endblock head %}
 
 {%block content%}
 <h2><small>Objednávka pro skupinu:</small> {{group.name}}</h2>
@@ -7,8 +10,8 @@
 <section class="item-list">
     {% for item in group.items.order_by(Item.name) %}
     <form method="post">
-      {{ form.csrf_token }}
-      {{ form.iid(value=item.id) }}
+      {{ form.csrf_token(id=False)}}
+      {{ form.iid(value=item.id, id=False) }}
     <h3>{{item.name}}</h3>
     <section class="item-item-1">
       <p class="item-img">
@@ -25,9 +28,9 @@
         <li><strong>{{ item.price }}</strong>,- Kč</li>
         <li>Počet:<br />
           {{ form.count(type="number", value=counts.get(item.id) or 0, min=0, max=777, 
-                        style="width: 4em;") }}
+                        style="width: 4em;", class="count", id=False) }}
         </li>
-        <li>{{ form.update() }}<li>
+        <li>{{ form.update(id=False, class="update") }}<li>
       </ul>
     </section>    
     <section class=item-item-2>    

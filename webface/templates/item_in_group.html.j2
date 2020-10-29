@@ -2,13 +2,13 @@
 
 
 {%block content%}
+<section class="item-list">
 <h2><small>Položky ve skupině:</small> {{group.name}}</h2>
 <p>{{ group.description }}</p>
-<section class="item-list">
     {% for item in group.items.order_by(Item.name) %}
     <form method="post">
-      {{ opform.csrf_token }}
-      {{ opform.iid(value=item.id) }}
+      {{ opform.csrf_token(id=False) }}
+      {{ opform.iid(value=item.id, id=False) }}
     <h3>{{item.name}}</h3>
     <section class="item-item-1">
       <p class="item-img">
@@ -23,7 +23,7 @@
           <li class="recommended">Doporučený</li>
         {% endif %}
         <li><strong>{{ item.price }}</strong>,- Kč</li>
-        <li>{{ opform.remove }}</li>
+        <li>{{ opform.remove(id=False) }}</li>
       </ul>
     </section>    
     <section class=item-item-2>    
