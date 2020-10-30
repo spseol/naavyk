@@ -63,7 +63,7 @@ def login():
                 conn.entries[-1].distinguishedName.value.upper(),
             )
             if m:
-                classname = m.groups(1)
+                classname = m.group(1)
             else:
                 classname = "XxX"
             name = conn.entries[-1].cn.value
@@ -301,8 +301,10 @@ def img(iid):
         "Content-Disposition",
         "inline",
         filename="{}.{}".format(
-            normalize('NFKD', item.name.replace(" ", "_")).encode('latin-1', 'ignore')
-            , item.imgtype.replace("/", ".")
+            normalize("NFKD", item.name.replace(" ", "_")).encode(
+                "latin-1", "ignore"
+            ),
+            item.imgtype.replace("/", "."),
         )
         # "Content-Disposition", "attachment", filename="%s.jpg" % _id
     )
