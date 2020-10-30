@@ -63,7 +63,7 @@ def login():
                 conn.entries[-1].distinguishedName.value.upper(),
             )
             if m:
-                classname = m.groups(1)
+                classname = m.group(1)
             else:
                 classname = "XxX"
             name = conn.entries[-1].cn.value
