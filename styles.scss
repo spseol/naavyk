@@ -367,6 +367,16 @@ footer {
     }
 }
 
+#total-info {
+    position: fixed;
+    right: 7px;
+    bottom: 7px;
+    background-color: cs-tertiary();
+    padding: 1ex;
+    border: 2px solid cs-secondary();
+    color: black;
+}
+
 #groupsel {
     a {
         color: white;

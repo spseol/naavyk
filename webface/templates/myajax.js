@@ -23,7 +23,9 @@ $( document ).ready(function() {
             type: 'POST',
             success: function (confirmdata) {
                 var input = $(form).find('input.count');
-                input.val(confirmdata);
+                input.val(confirmdata.count);
+                $('#total-price').text(confirmdata.price);
+                $('#total-count').text(confirmdata.totalcount);
                 input.parent().append('<span id="donedone" >&#128504;</span>')
                 $('#donedone').fadeOut(800);
                 setTimeout(function() {

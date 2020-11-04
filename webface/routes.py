@@ -8,6 +8,7 @@ from flask import (
     flash,
     make_response,
     abort,
+    json,
 )
 from flask_login import login_user, logout_user, current_user, login_required
 from .forms import (
@@ -20,6 +21,7 @@ from .forms import (
 )
 from .models import User, Group, Item, Order, ItemOrder, Classroom
 from pony.orm import db_session, ObjectNotFound
+import pony.orm as pony
 from ldap3 import Server, Connection, ALL, NTLM
 from unicodedata import normalize
 
@@ -240,14 +242,24 @@ def order(gid):
             ItemOrder(order=order, item=item, count=count)
         return redirect(url_for("order", gid=gid))
     # objednané položky
-    items = list(current_user.orders.select(lambda o: o.group.id == gid))
+    user = User[current_user.id]
+    items = list(user.orders.select(lambda o: o.group.id == gid))
     # je třeba ošetři případ, kdy ještě zatím není nic objednáno
     items = items[-1].items if items else []
     counts = dict()
     for i in items:
         counts[i.item.id] = i.count
+    price = pony.sum(i.item.price * i.count for i in items)
+    count = pony.count(i for i in items if i.count)
+
     return render_template(
-        "order.html.j2", group=group, counts=counts, Item=Item, form=form
+        "order.html.j2",
+        group=group,
+        counts=counts,
+        Item=Item,
+        form=form,
+        price=price,
+        count=count,
     )
 
 
@@ -276,7 +288,15 @@ def orderAJAX(gid):
             item_order.count = count
         else:
             ItemOrder(order=order, item=item, count=count)
-        return str(count)
+
+        items = list(user.orders.select(lambda o: o.group.id == gid))
+        # je třeba ošetři případ, kdy ještě zatím není nic objednáno
+        items = items[-1].items if items else []
+
+        price = pony.sum(i.item.price * i.count for i in items)
+        totalcount = pony.count(i for i in items if i.count)
+
+        return json.jsonify(count=count, price=price, totalcount=totalcount)
     else:
         return abort(405)
 
