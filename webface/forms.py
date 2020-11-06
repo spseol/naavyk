@@ -114,7 +114,7 @@ class ItemForm(FlaskForm):
         "Obrázek",
         validators=[
             FileRequired(),
-            FilenameRegexp(r"\.(jpe?g|png|gif|svg)$"),
+            FilenameRegexp(r"\.(jpe?g|png|gif|svg|webp)$"),
         ],
     )
     submit = SubmitField("additem")
@@ -123,7 +123,9 @@ class ItemForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.groups.choices = [
-            (str(g.id), g.name) for g in list(Group.select(lambda g: g.enable))
+            # (str(g.id), g.name) for g in list(Group.select(lambda g: g.enable))
+            (str(g.id), g.name)
+            for g in list(Group.select())
         ]
 
     # @db_session
