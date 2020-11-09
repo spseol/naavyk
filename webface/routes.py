@@ -17,6 +17,7 @@ from .forms import (
     GroupEdit,
     ItemForm,
     ItemOperation,
+    ItemEdit,
     OrderForm,
 )
 from .models import User, Group, Item, Order, ItemOrder, Classroom
@@ -302,6 +303,32 @@ def orderAJAX(gid):
         return json.jsonify(count=count, price=price, totalcount=totalcount)
     else:
         return abort(405)
+
+
+@app.route("/item/<uuid:iid>", methods=["GET"])
+@login_required
+@db_session
+def itemedit(iid):
+    if not current_user.admin:
+        flash("Nemáš dostatečná oprávnění!")
+        return redirect(url_for("index"))
+    form = ItemEdit()
+    item = Item[iid]
+    form.name.data = item.name
+    form.description.data = item.description
+    form.url.data = item.url
+    form.price.data = item.price
+    form.necessary.data = item.necessary
+    form.recommended.data = item.recommended
+    form.groups.data = [str(g.id) for g in item.groups]
+    print(form.groups.data)
+
+    return render_template("itemedit.html.j2", form=form, item=item)
+
+
+@app.route("/item/<uuid:iid>", methods=["POST"])
+def itemedit_post(iid):
+    pass
 
 
 ############################################################################

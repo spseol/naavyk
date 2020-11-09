@@ -135,23 +135,18 @@ class ItemForm(FlaskForm):
             if g.enable:
                 self.enablegroups.append(i)
 
-    # @db_session
-    # def __init__(self, *args, **kwargs):
-    #     super(ItemForm, self).__init__(*args, **kwargs)
-    #     for g in list(Group.select(lambda g: g.enable)):
-    #         self.groups.append_entry()
-    #         self.groups[-1].checkbox.id = "group-{}".format(g.id)
-    #         self.groups[-1].checkbox.name = "groups-{}-checkbox".format(g.id)
-    #         self.groups[-1].checkbox.label = Label(
-    #             self.groups[-1].checkbox.id, g.name
-    #         )
-
 
 class ItemOperation(FlaskForm):
     "smazání položky"
     iid = HiddenField("iid")
     remove = SubmitField("Smazat")
     edit = SubmitField("Editovat")
+
+
+class ItemEdit(ItemForm):
+    imgdata = FileField(
+        "Obrázek", validators=[FilenameRegexp(r"\.(jpe?g|png|gif|svg|webp)$")],
+    )
 
 
 class OrderForm(FlaskForm):

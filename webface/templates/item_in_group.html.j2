@@ -24,6 +24,29 @@
     
   function editClick(event) {
     event.preventDefault();
+    var iid = $(this).parents('form').children('input[name="iid"]').val();
+    section = $(this).parents('section');
+    
+    fetch("/item/"+iid)
+    .then(function (response) {
+      return  response.text();
+    })
+    .then(function (body) {
+      console.log(body);
+      section.prepend('<div id="background"><div id="editwin">'+body+'</div></div>')
+
+      $("#cancel").click(function(event) {
+        event.preventDefault();
+        $("#background").remove();
+      })
+
+      $("#submit").click(function(event) {
+        event.preventDefault();
+      })
+
+    });
+
+
   }
 
   $( document ).ready(function() {

@@ -1,0 +1,48 @@
+<h2>Editace položky</h2>
+
+<p style="float:right;"> 
+  <img src="{{ url_for('img', iid=item.id) }}" style="max-width: 300px; max-height: 300px;" alt="">
+</p>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <p>Název:<br />
+    {{form.name(size=40) }} 
+    </p>
+    <p>Nový obrázek: (JPEG, PNG, GIF, SVG, WEBP)<br />
+    {%- if form.imgdata.errors|count > 0 -%}
+        {%- set field_class = "error-field" -%}
+    {%- else -%}
+        {%- set field_class = "ok" -%}
+    {%- endif -%}
+    {{ form.imgdata(class=field_class) }}
+    </p>
+    <p>Popis:<br />
+    {{ form.description(cols=40, rows=4) }}</p> 
+    {%- if form.url.errors|count > 0 -%}
+        {%- set field_class = "error-field" -%}
+    {%- else -%}
+        {%- set field_class = "ok" -%}
+    {%- endif -%}
+    <p>Adresa:<br />
+    {{ form.url(size=40, class=field_class) }}</p> 
+    <p>Cena:<br />
+    {{ form.price(type="number", min=1, max=7777, style="width: 5em;") }} Kč 
+    {{ form.necessary() }} {{form.necessary.label("Nutné") }}
+    {{ form.recommended() }} {{form.recommended.label("Doporučené")}}</p>
+    <p>Skupina (minimálně jedna):<br />
+    {% for g in form.groups  %}
+      {% if loop.index0 in form.enablegroups %}
+        {{g}} {{g.label(style="color:#55AA92;font-weight:bold;")}} 
+      {% else %}
+        {{g}} {{g.label(style="color:#4B0082")}} 
+      {% endif %}
+    {% endfor %}
+    </p>
+    <p>
+      <button id="cancel">Zrušit</button>
+      {{ form.submit(value='Aktualizovat') }} 
+    </p> 
+
+
+</form>
