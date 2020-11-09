@@ -7,7 +7,10 @@ Položky jsou třízeny  do těchto skupin:
 
 <ul class="groups-list">
 {%- for g in groups %}
-  <li><a href="{{ url_for('item_in_group', gid=g.id) }}">{{g.name}}</a></li>
+  <li><a href="{{ url_for('item_in_group', gid=g.id) }}" 
+         style="{% if not g.enable %}color:#4B0082;{%else%}font-weight:bold;{%endif%}"
+      >{{g.name}}</a>
+  </li>
 {%- endfor %}
 </ul>
 
@@ -41,7 +44,11 @@ Položky jsou třízeny  do těchto skupin:
     {{ addform.recommended() }} {{addform.recommended.label("Doporučené")}}</p>
     <p>Skupina (minimálně jedna):<br />
     {% for g in addform.groups  %}
-      {{g}} {{g.label}}
+      {% if loop.index0 in addform.enablegroups %}
+        {{g}} {{g.label(style="color:#55AA92;font-weight:bold;")}} 
+      {% else %}
+        {{g}} {{g.label(style="color:#4B0082")}} 
+      {% endif %}
     {% endfor %}
     </p>
     <p>{{ addform.submit(value='Přidat položku') }}</p> 

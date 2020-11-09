@@ -45,7 +45,7 @@ $( document ).ready(function() {
 
 {%block content%}
 <h2><small>Objednávka pro skupinu:</small> {{group.name}}</h2>
-<p>{{ group.description }}</p>
+<p class="group-description">{{ group.description }}</p>
 <section class="item-list">
     {% for item in group.items.order_by(Item.name) %}
     <form method="post">

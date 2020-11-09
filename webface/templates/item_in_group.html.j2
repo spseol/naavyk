@@ -16,13 +16,19 @@
           buttonConfirm: 'Ano',
           buttonCancel: 'Ne',
           onConfirm(component) {
+              form.append('<input type="hidden" name="remove" value="Smazat" />');
               form.submit();
           }
       });
   };
     
+  function editClick(event) {
+    event.preventDefault();
+  }
+
   $( document ).ready(function() {
-      $('.remove').click(removeClick);
+    $('.remove').click(removeClick);
+    $('.edit').click(editClick);
   });
 
 </script>
@@ -31,13 +37,13 @@
 {%block content%}
 <section class="item-list">
 <h2><small>Položky ve skupině:</small> {{group.name}}</h2>
-<p>{{ group.description }}</p>
+<p class="group-description">{{ group.description }}</p>
     {% for item in group.items.order_by(Item.name) %}
     <form method="post">
       {{ opform.csrf_token(id=False) }}
       {{ opform.iid(value=item.id, id=False) }}
     <h3>{{item.name}}</h3>
-    <section class="item-item-1">
+    <div class="item-item-1">
       <p class="item-img">
         <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
       </p>
@@ -53,13 +59,13 @@
         <li>{{ opform.remove(id=False, class='remove') }}</li>
         <li>{{ opform.edit(id=False, class='edit') }}</li>
       </ul>
-    </section>    
-    <section class=item-item-2>    
+    </div>    
+    <div class=item-item-2>    
       <p>Cena: <strong>{{ item.price }}</strong>,- Kč</p>
       <p>{% if item.url %}Adresa: <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
       {% endif %}
       </p>
-      </section>    
+    </div>    
       <hr />
     </form>
     {% endfor %}

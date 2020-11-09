@@ -47,7 +47,7 @@ def login():
         passwd = form.passwd.data
 
         # server = Server("pdc.spseol.cz", get_info=ALL)
-        server = Server("172.24.1.1", get_info=ALL)
+        server = Server(app.config["LDAP"]["host"], get_info=ALL)
         conn = Connection(
             server,
             user="spseol.cz\\{}".format(login),
@@ -85,6 +85,7 @@ def login():
                 user = User.get(
                     login=login
                 )  # nevím přesně proč, ale tohle je potřeba udělat
+            conn.unbind()
             login_user(user, remember=form.remember_me.data)
             flash("Právě jsi se přihlásil!")
             next_ = request.args.get("next")
@@ -176,7 +177,8 @@ def item():
         if addform.is_submitted():
             for field, message in addform.errors.items():
                 flash("Chybička: {}->{}".format(field, message), "error")
-    groups = Group.select(lambda g: g.enable)[:]
+    # groups = Group.select(lambda g: g.enable)[:]
+    groups = Group.select().order_by(Group.name)[:]
     return render_template("item.html.j2", groups=groups, addform=addform)
 
 
@@ -205,7 +207,7 @@ def item_in_group_POST(gid):
         flash("Nemáš dostatečná oprávnění!")
         return redirect(url_for("index"))
     opform = ItemOperation()
-    if opform.validate_on_submit():
+    if opform.validate_on_submit() and opform.remove.data:
         iid = opform.iid.data
         try:
             item = Item[iid]
@@ -213,6 +215,7 @@ def item_in_group_POST(gid):
             return redirect(url_for("item_in_group", gid=gid))
         except ObjectNotFound:
             return abort(404)
+    return redirect(url_for("item_in_group", gid=gid))
 
 
 @app.route("/order/<uuid:gid>", methods=["GET", "POST"])

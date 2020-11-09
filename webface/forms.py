@@ -64,6 +64,8 @@ class LoginForm(FlaskForm):
 
 
 class GroupForm(FlaskForm):
+    """Přidání skupiny"""
+
     name = StringField("name", validators=[InputRequired()])
     description = TextAreaField(
         "description", validators=[optional(), length(max=777)]
@@ -72,6 +74,8 @@ class GroupForm(FlaskForm):
 
 
 class GroupEdit(FlaskForm):
+    """Nastavení atributů skupiny"""
+
     # group_id = HiddenField("group_id", validators=[DataRequired()])
     group_id = HiddenField("group_id")
     enable = SubmitField("Povolit")
@@ -90,6 +94,8 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class ItemForm(FlaskForm):
+    """Přidání položky"""
+
     name = StringField("name", validators=[InputRequired()])
     description = TextAreaField(
         "description", validators=[optional(), length(max=777)]
@@ -122,11 +128,12 @@ class ItemForm(FlaskForm):
     @db_session
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.groups.choices = [
-            # (str(g.id), g.name) for g in list(Group.select(lambda g: g.enable))
-            (str(g.id), g.name)
-            for g in list(Group.select())
-        ]
+        self.groups.choices = []
+        self.enablegroups = []
+        for i, g in enumerate(Group.select().order_by(Group.name)):
+            self.groups.choices.append((str(g.id), g.name))
+            if g.enable:
+                self.enablegroups.append(i)
 
     # @db_session
     # def __init__(self, *args, **kwargs):
@@ -141,13 +148,15 @@ class ItemForm(FlaskForm):
 
 
 class ItemOperation(FlaskForm):
-    # iid = HiddenField("iid", validators=[InputRequired()])
+    "smazání položky"
     iid = HiddenField("iid")
     remove = SubmitField("Smazat")
+    edit = SubmitField("Editovat")
 
 
 class OrderForm(FlaskForm):
-    # iid = HiddenField("iid", validators=[InputRequired()])
+    """objednávka"""
+
     iid = HiddenField("iid")
     count = IntegerField(
         "count",
