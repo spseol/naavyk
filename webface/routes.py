@@ -304,10 +304,10 @@ def orderAJAX(gid):
 ############################################################################
 
 
-@app.route("/myajax.js")
-def myajaxjs():
-    gid = request.args.get("gid")
-    return render_template("myajax.js", gid=gid)
+# @app.route("/myajax.js")
+# def myajaxjs():
+#     gid = request.args.get("gid")
+#     return render_template("myajax.js", gid=gid)
 
 
 @app.route("/img/<uuid:iid>")
