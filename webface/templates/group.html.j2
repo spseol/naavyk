@@ -1,5 +1,38 @@
 {% extends "base.html.j2" %}
 
+{% block endbody %}
+
+<script>
+
+  removeClick = function(event) {
+      event.preventDefault();
+
+      var nadpis = $(this).parents('dl').children('dt').clone();
+      nadpis.children('a').remove();
+      nadpis = nadpis.text();
+      var form = $(this).parents('form');
+
+      new Attention.Confirm({
+          useInnerHTML: true,
+          title: 'Smazat?',
+          content: 'Opravdu chceš smazat <strong>' + nadpis + '</strong>?',
+          buttonConfirm: 'Ano',
+          buttonCancel: 'Ne',
+          onConfirm(component) {
+            form.append('<input type="hidden" name="remove" value="Smazat" />');
+            form.submit();
+          }
+      });
+  };
+      
+
+  $( document ).ready(function() {
+      $('.remove').click(removeClick);
+  });
+
+</script>
+{% endblock endbody %}
+
 {%block content%}
 <h2>Skupiny</h2>
 
@@ -16,7 +49,7 @@
       {{edform.group_id(value=g.id, id=False)}}
       {{edform.enable(id=False)}}
       {{edform.disable(id=False)}}
-      {{edform.remove(id=False)}}
+      {{edform.remove(id=False, class="remove")}}
     </dd>
   </dl>
 </form>

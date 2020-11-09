@@ -1,5 +1,32 @@
 {% extends "base.html.j2" %}
 
+{% block endbody %}
+<script>
+
+  removeClick = function(event) {
+      event.preventDefault();
+
+      var nadpis = $(this).parents('form').children('h3').text();
+      var form = $(this).parents('form');
+
+      new Attention.Confirm({
+          useInnerHTML: true,
+          title: 'Smazat?',
+          content: 'Opravdu chceš smazat <strong>' + nadpis + '</strong>?',
+          buttonConfirm: 'Ano',
+          buttonCancel: 'Ne',
+          onConfirm(component) {
+              form.submit();
+          }
+      });
+  };
+    
+  $( document ).ready(function() {
+      $('.remove').click(removeClick);
+  });
+
+</script>
+{% endblock endbody %}
 
 {%block content%}
 <section class="item-list">
@@ -23,7 +50,7 @@
           <li class="recommended">Doporučený</li>
         {% endif %}
         <li><strong>{{ item.price }}</strong>,- Kč</li>
-        <li>{{ opform.remove(id=False) }}</li>
+        <li>{{ opform.remove(id=False, class='remove') }}</li>
       </ul>
     </section>    
     <section class=item-item-2>    

@@ -1,8 +1,8 @@
 {% extends "base.html.j2" %}
 
-{% block head %}
+{% block endbody %}
 <script src="{{ url_for('myajaxjs', gid=group.id) }}"> </script>
-{% endblock head %}
+{% endblock endbody %}
 
 {%block content%}
 <h2><small>Objednávka pro skupinu:</small> {{group.name}}</h2>
