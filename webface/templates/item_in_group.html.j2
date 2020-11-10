@@ -1,5 +1,7 @@
 {% extends "base.html.j2" %}
 
+{%- set url_itemedit = url_for('itemedit',iid=0)[0:-1] -%}
+
 {% block endbody %}
 <script>
 
@@ -22,20 +24,16 @@
       });
   };
     
-  function editClick(event) {
+  async function editClick(event) {
     event.preventDefault();
     var iid = $(this).parents('form').children('input[name="iid"]').val();
-    section = $(this).parents('section');
-    
-    fetch("/item/"+iid)
-    .then(function (response) {
-      return  response.text();
-    })
-    .then(function (body) {
-      console.log(body);
-      section.prepend('<div id="background"><div id="editwin">'+body+'</div></div>')
+    var section = $(this).parents('section');
+    const response = await fetch("{{ url_itemedit }}"+iid, {method:"GET"});
+    if (response.ok) {
+      html = await response.text();
+      section.prepend('<div id="background"><div id="editwin">'+html+'</div></div>')
 
-      $("#cancel").click(function(event) {
+      $(".cancel").click(function(event) {
         event.preventDefault();
         $("#background").remove();
       })
@@ -43,10 +41,28 @@
       $("#submit").click(function(event) {
         event.preventDefault();
       })
+      $('#submit').click(aktualizovatClick);
+    }
+  }
 
+  async function aktualizovatClick(event) {
+    event.preventDefault();
+
+    const form = $(this).parents('form');
+    const iid = form.attr('id');
+    const fdata = new FormData(form[0]);
+    const action = form.attr('action');
+    const response = await fetch(action, {
+      method:"POST",
+      body: fdata,
     });
+    if (response.ok) {
+      data = await response.json();
+      document.getElementById(iid).innerHTML=data.name;
+      document.getElementById(iid).style.color = "red";
 
-
+      $("#background").remove();
+    }
   }
 
   $( document ).ready(function() {
@@ -65,7 +81,7 @@
     <form method="post">
       {{ opform.csrf_token(id=False) }}
       {{ opform.iid(value=item.id, id=False) }}
-    <h3>{{item.name}}</h3>
+    <h3 id="{{ item.id }}">{{item.name}}</h3>
     <div class="item-item-1">
       <p class="item-img">
         <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">

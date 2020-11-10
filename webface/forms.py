@@ -36,6 +36,8 @@ from .models import Group
 
 class FilenameRegexp(Regexp):
     def __call__(self, form, field, message=None):
+        if field.data is None:
+            return True  # jméno souboru neexistuje, soubory nebyl vybrán
         filename = secure_filename(field.data.filename)
         search = self.regex.search(filename or "")
         if not search:

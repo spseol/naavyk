@@ -1,10 +1,12 @@
+<p id="button-cancel"><button class="cancel">✘</button></p>
 <h2>Editace položky</h2>
 
 <p style="float:right;"> 
   <img src="{{ url_for('img', iid=item.id) }}" style="max-width: 300px; max-height: 300px;" alt="">
 </p>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data"
+      action="{{ url_for('itemedit', iid=item.id) }}" id="{{ item.id }}">
     {{ form.csrf_token }}
     <p>Název:<br />
     {{form.name(size=40) }} 
@@ -40,7 +42,7 @@
     {% endfor %}
     </p>
     <p>
-      <button id="cancel">Zrušit</button>
+      <button class="cancel">Zrušit ✘</button>
       {{ form.submit(value='Aktualizovat') }} 
     </p> 
 

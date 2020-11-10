@@ -409,9 +409,15 @@ footer {
     font-size: 2rem;
 }
 
-p.group-desctiption {
-    font-size:200% ;
-    color: green;
+p.group-description {
+    font-size:105% ;
+    padding: 1ex 2ex;
+    margin-left:  1em;
+    margin-right: 1em;
+    color: #555;
+    border-radius: 5px;
+    border-left: solid #555 2px;
+    border-bottom: solid #555 2px;
 }
 
 #background {
@@ -427,6 +433,25 @@ p.group-desctiption {
 #editwin {
     background-color: white;
     padding: 5%;
+    border-radius: 20px;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    position: relative;
+    
+    #button-cancel {
+        padding: 0;
+        margin: 0;
+        position:absolute;
+        right: 10px;
+        top: 10px;
+        button {
+            border-width: 0px;
+            background-color: white;
+            font-size: 200%;
+            color: #a31;
+        }
+    }
 }
 
 

@@ -8,9 +8,14 @@ from flask import (
     flash,
     make_response,
     abort,
-    json,
+    jsonify,
 )
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import (
+    login_user,
+    logout_user,
+    current_user,
+    login_required,
+)
 from .forms import (
     LoginForm,
     GroupForm,
@@ -300,35 +305,59 @@ def orderAJAX(gid):
         price = pony.sum(i.item.price * i.count for i in items)
         totalcount = pony.count(i for i in items if i.count)
 
-        return json.jsonify(count=count, price=price, totalcount=totalcount)
+        return jsonify(count=count, price=price, totalcount=totalcount)
     else:
         return abort(405)
 
 
-@app.route("/item/<uuid:iid>", methods=["GET"])
+@app.route("/item/<uuid:iid>", methods=["GET", "POST"])
 @login_required
 @db_session
 def itemedit(iid):
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
+        return abort(403)
         return redirect(url_for("index"))
+    try:
+        item = Item[iid]
+    except ObjectNotFound:
+        return abort(404)
     form = ItemEdit()
-    item = Item[iid]
-    form.name.data = item.name
-    form.description.data = item.description
-    form.url.data = item.url
-    form.price.data = item.price
-    form.necessary.data = item.necessary
-    form.recommended.data = item.recommended
-    form.groups.data = [str(g.id) for g in item.groups]
-    print(form.groups.data)
-
-    return render_template("itemedit.html.j2", form=form, item=item)
-
-
-@app.route("/item/<uuid:iid>", methods=["POST"])
-def itemedit_post(iid):
-    pass
+    if request.method == "GET":
+        form.name.data = item.name
+        form.description.data = item.description
+        form.url.data = item.url
+        form.price.data = item.price
+        form.necessary.data = item.necessary
+        form.recommended.data = item.recommended
+        form.groups.data = [str(g.id) for g in item.groups]
+        # print(form.groups.data)
+        return render_template("itemedit.html.j2", form=form, item=item)
+    elif request.method == "POST":
+        if form.validate():
+            if form.imgdata.data:
+                f = form.imgdata.data
+                item.imgdata = bytes(f.read())
+                item.imgtype = f.mimetype
+            item.name = form.name.data
+            item.description = form.description.data
+            item.url = form.url.data
+            item.price = int(form.price.data)
+            item.necessary = form.necessary.data
+            item.recommended = form.recommended.data
+            for gid in form.groups.data:
+                item.groups += [Group[gid]]
+            return jsonify(
+                name=item.name,
+                description=item.description,
+                url=item.url,
+                price=item.price,
+                necessary=item.necessary,
+                recommended=item.recommended,
+            )
+        else:
+            print(form.errors)
+            return jsonify(form.errors), 400
 
 
 ############################################################################
