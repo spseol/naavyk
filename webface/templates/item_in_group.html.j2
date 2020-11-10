@@ -27,6 +27,7 @@
   async function editClick(event) {
     event.preventDefault();
     var iid = $(this).parents('form').children('input[name="iid"]').val();
+    var thisform = $(this).parents('form')
     var section = $(this).parents('section');
     const response = await fetch("{{ url_itemedit }}"+iid, {method:"GET"});
     if (response.ok) {
@@ -38,32 +39,27 @@
         $("#background").remove();
       })
 
-      $("#submit").click(function(event) {
+      $("#submit").click(async function(event) {
         event.preventDefault();
+
+        const form = $(this).parents('form');
+        const iid = form.attr('id');
+        const fdata = new FormData(form[0]);
+        const action = form.attr('action');
+        const response = await fetch(action, {
+          method:"POST",
+          body: fdata,
+        });
+        if (response.ok) {
+          data = await response.json();
+
+          thisform.children('h3').text(data.name);
+          $("#background").remove();
+        }
       })
-      $('#submit').click(aktualizovatClick);
     }
   }
 
-  async function aktualizovatClick(event) {
-    event.preventDefault();
-
-    const form = $(this).parents('form');
-    const iid = form.attr('id');
-    const fdata = new FormData(form[0]);
-    const action = form.attr('action');
-    const response = await fetch(action, {
-      method:"POST",
-      body: fdata,
-    });
-    if (response.ok) {
-      data = await response.json();
-      document.getElementById(iid).innerHTML=data.name;
-      document.getElementById(iid).style.color = "red";
-
-      $("#background").remove();
-    }
-  }
 
   $( document ).ready(function() {
     $('.remove').click(removeClick);

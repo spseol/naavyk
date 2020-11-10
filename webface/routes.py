@@ -60,21 +60,24 @@ def login():
             password=passwd,
             authentication=NTLM,
         )
-        if conn.bind():
-            conn.search(
-                "dc=spseol,dc=cz",
-                "(sAMAccountName={})".format(login),
-                attributes=["cn", "distinguishedName"],
-            )
-            m = re.search(
-                "OU=([1234]([ABCL]|V[TE]))",
-                conn.entries[-1].distinguishedName.value.upper(),
-            )
-            if m:
-                classname = m.group(1)
+        if app.env == "development" or conn.bind():
+            if app.env == "development":
+                name = login
             else:
-                classname = "XxX"
-            name = conn.entries[-1].cn.value
+                conn.search(
+                    "dc=spseol,dc=cz",
+                    "(sAMAccountName={})".format(login),
+                    attributes=["cn", "distinguishedName"],
+                )
+                m = re.search(
+                    "OU=([1234]([ABCL]|V[TE]))",
+                    conn.entries[-1].distinguishedName.value.upper(),
+                )
+                if m:
+                    classname = m.group(1)
+                else:
+                    classname = "XxX"
+                name = conn.entries[-1].cn.value
             user = User.get(login=login)
             admin = login in ("nozka", "dudka", "pospisil")
             classroom = Classroom.get(name=classname) or Classroom(
