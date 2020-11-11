@@ -16,7 +16,7 @@ updateClick = function(event) {
         contentType: false,
         type: 'POST',
         success: function (confirmdata) {
-            console.log(confirmdata);
+            //console.log(confirmdata);
             var input = $(form).find('input.count');
             input.val(confirmdata.count);
             $('#total-price').text(confirmdata.price+',-');
@@ -32,7 +32,10 @@ updateClick = function(event) {
 
 
 $( document ).ready(function() {
-    $('.update').click(updateClick);
+  $('.update').click(updateClick);
+  $('input.count').change(function(event) {
+    $(this).next('input.update').submit();
+  });
 });
 
 
