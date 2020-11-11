@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_pony import Pony
 from flask_login import LoginManager
+
 # from flask_misaka import Misaka
 from flask_wtf.csrf import CSRFProtect
 from flask_uuid import FlaskUUID
@@ -27,5 +28,6 @@ from . import forms
 
 if app.env == "development":
     set_sql_debug(True)
+    app.config["ADMINS"] = app.config["DEVELOPADMINS"]
 
 pony.connect()

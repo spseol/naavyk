@@ -52,8 +52,26 @@
         });
         if (response.ok) {
           data = await response.json();
-
           thisform.children('h3').text(data.name);
+          thisform.find('p.item-dsc').text(data.description);
+          thisform.find('strong').text(data.price);
+          thisform.find('.url').attr('href', data.url);
+          thisform.find('.url').text(data.url);
+          thisform.find('.recommended').remove();
+          thisform.find('.necessary').remove();
+          if (data.recommended) {
+            thisform.find('.item-ul').prepend('<li class="recommended">Doporučený</li>');
+          }
+          if (data.necessary) {
+            thisform.find('.item-ul').prepend('<li class="necessary">Nezbytný</li>');
+          }
+          if (data.image) {
+            console.log('obrazek');
+            var img = thisform.find('img');
+            var src = img.attr('src');
+            img.attr('src', src+'?r='+Math.random());
+          }
+
           $("#background").remove();
         }
       })
@@ -77,13 +95,13 @@
     <form method="post">
       {{ opform.csrf_token(id=False) }}
       {{ opform.iid(value=item.id, id=False) }}
-    <h3 id="{{ item.id }}">{{item.name}}</h3>
+    <h3>{{item.name}}</h3>
     <div class="item-item-1">
       <p class="item-img">
         <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
       </p>
       <p class="item-dsc">{{ item.description }}</p>
-      <ul>
+      <ul class="item-ul">
         {% if item.necessary %}
           <li class="necessary">Nezbytný</li>
         {% endif %}
@@ -96,8 +114,10 @@
       </ul>
     </div>    
     <div class=item-item-2>    
-      <p>Cena: <strong>{{ item.price }}</strong>,- Kč</p>
-      <p>{% if item.url %}Adresa: <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
+      <p class="price">Cena: <strong>{{ item.price }}</strong>,- Kč</p>
+      <p>{% if item.url %}Adresa: <a href="{{ item.url }}" 
+                                     target="_blank" 
+                                     class="url">{{ item.url }}</a>
       {% endif %}
       </p>
     </div>    

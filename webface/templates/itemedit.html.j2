@@ -6,7 +6,7 @@
 </p>
 
 <form method="POST" enctype="multipart/form-data"
-      action="{{ url_for('itemedit', iid=item.id) }}" id="{{ item.id }}">
+      action="{{ url_for('itemedit', iid=item.id) }}">
     {{ form.csrf_token }}
     <p>Název:<br />
     {{form.name(size=40) }} 

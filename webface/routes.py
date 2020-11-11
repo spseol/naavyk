@@ -63,6 +63,8 @@ def login():
         if app.env == "development" or conn.bind():
             if app.env == "development":
                 name = login
+                login = "." + login
+                classname = "develop"
             else:
                 conn.search(
                     "dc=spseol,dc=cz",
@@ -79,7 +81,7 @@ def login():
                     classname = "XxX"
                 name = conn.entries[-1].cn.value
             user = User.get(login=login)
-            admin = login in ("nozka", "dudka", "pospisil")
+            admin = login in app.config["ADMINS"]
             classroom = Classroom.get(name=classname) or Classroom(
                 name=classname
             )
@@ -342,6 +344,9 @@ def itemedit(iid):
                 f = form.imgdata.data
                 item.imgdata = bytes(f.read())
                 item.imgtype = f.mimetype
+                image = True
+            else:
+                image = False
             item.name = form.name.data
             item.description = form.description.data
             item.url = form.url.data
@@ -357,6 +362,7 @@ def itemedit(iid):
                 price=item.price,
                 necessary=item.necessary,
                 recommended=item.recommended,
+                image=image,
             )
         else:
             print(form.errors)
