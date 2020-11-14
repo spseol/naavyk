@@ -55,7 +55,7 @@ $( document ).ready(function() {
       <p class="item-img">
         <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
       </p>
-      <p class="item-dsc">{{ item.description }}</p>
+      <div class="item-dsc">{{ item.description | markdown }}</div>
       <ul>
         {% if item.necessary %}
           <li class="necessary">Nezbytný</li>
@@ -73,7 +73,8 @@ $( document ).ready(function() {
     </section>    
     <section class=item-item-2>    
       <p>Cena: <strong>{{ item.price }}</strong>,- Kč</p>
-      <p>{% if item.url %}Adresa: <a href="{{ item.url }}" target="_blank">{{ item.url }}</a>
+      <p>{% if item.url %}
+        Adresa: {{ item.url | urlize(59,target='_blank')}}
       {% endif %}
       </p>
       </section>    

@@ -100,7 +100,7 @@
       <p class="item-img">
         <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
       </p>
-      <p class="item-dsc">{{ item.description }}</p>
+      <div class="item-dsc">{{ item.description | markdown }}</div>
       <ul class="item-ul">
         {% if item.necessary %}
           <li class="necessary">Nezbytný</li>
@@ -115,11 +115,9 @@
     </div>    
     <div class=item-item-2>    
       <p class="price">Cena: <strong>{{ item.price }}</strong>,- Kč</p>
-      <p>{% if item.url %}Adresa: <a href="{{ item.url }}" 
-                                     target="_blank" 
-                                     class="url">{{ item.url }}</a>
-      {% endif %}
-      </p>
+      <p>{% if item.url %}
+        Adresa: {{ item.url |urlize(64,target="_blank")}}
+      {% endif %}</p>
     </div>    
       <hr />
     </form>

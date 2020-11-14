@@ -3,5 +3,6 @@ Flask-WTF
 Flask-Login
 Flask-pony
 Flask-uuid
+Flask-misaka
 ldap3
 python-dotenv

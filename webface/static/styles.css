@@ -367,7 +367,7 @@ a.navlink {
   display: flex; }
   .item-item-1 p.item-img {
     flex: 2; }
-  .item-item-1 p.item-dsc {
+  .item-item-1 div.item-dsc {
     flex: 4; }
   .item-item-1 ul {
     flex: 1;
@@ -484,244 +484,244 @@ p.group-description {
   /* custom */ }
 
 .bar:nth-child(1) {
-  height: 112px; }
+  height: 122px; }
 
 .bar:nth-child(2) {
-  height: 116px; }
+  height: 101px; }
 
 .bar:nth-child(3) {
-  height: 115px; }
+  height: 66px; }
 
 .bar:nth-child(4) {
-  height: 88px; }
+  height: 60px; }
 
 .bar:nth-child(5) {
-  height: 70px; }
+  height: 116px; }
 
 .bar:nth-child(6) {
-  height: 67px; }
-
-.bar:nth-child(7) {
-  height: 76px; }
-
-.bar:nth-child(8) {
-  height: 71px; }
-
-.bar:nth-child(9) {
-  height: 88px; }
-
-.bar:nth-child(10) {
-  height: 53px; }
-
-.bar:nth-child(11) {
-  height: 74px; }
-
-.bar:nth-child(12) {
-  height: 19px; }
-
-.bar:nth-child(13) {
-  height: 22px; }
-
-.bar:nth-child(14) {
-  height: 34px; }
-
-.bar:nth-child(15) {
-  height: 71px; }
-
-.bar:nth-child(16) {
-  height: 57px; }
-
-.bar:nth-child(17) {
-  height: 57px; }
-
-.bar:nth-child(18) {
-  height: 15px; }
-
-.bar:nth-child(19) {
-  height: 26px; }
-
-.bar:nth-child(20) {
-  height: 74px; }
-
-.bar:nth-child(21) {
-  height: 18px; }
-
-.bar:nth-child(22) {
-  height: 108px; }
-
-.bar:nth-child(23) {
-  height: 42px; }
-
-.bar:nth-child(24) {
-  height: 79px; }
-
-.bar:nth-child(25) {
-  height: 40px; }
-
-.bar:nth-child(26) {
-  height: 85px; }
-
-.bar:nth-child(27) {
-  height: 92px; }
-
-.bar:nth-child(28) {
-  height: 114px; }
-
-.bar:nth-child(29) {
-  height: 51px; }
-
-.bar:nth-child(30) {
-  height: 90px; }
-
-.bar:nth-child(31) {
-  height: 121px; }
-
-.bar:nth-child(32) {
-  height: 75px; }
-
-.bar:nth-child(33) {
-  height: 47px; }
-
-.bar:nth-child(34) {
-  height: 105px; }
-
-.bar:nth-child(35) {
-  height: 25px; }
-
-.bar:nth-child(36) {
   height: 43px; }
 
-.bar:nth-child(37) {
-  height: 38px; }
+.bar:nth-child(7) {
+  height: 29px; }
 
-.bar:nth-child(38) {
-  height: 74px; }
+.bar:nth-child(8) {
+  height: 84px; }
 
-.bar:nth-child(39) {
-  height: 118px; }
+.bar:nth-child(9) {
+  height: 62px; }
 
-.bar:nth-child(40) {
-  height: 102px; }
+.bar:nth-child(10) {
+  height: 29px; }
 
-.bar:nth-child(41) {
-  height: 114px; }
-
-.bar:nth-child(42) {
-  height: 40px; }
-
-.bar:nth-child(43) {
-  height: 39px; }
-
-.bar:nth-child(44) {
-  height: 117px; }
-
-.bar:nth-child(45) {
-  height: 125px; }
-
-.bar:nth-child(46) {
-  height: 26px; }
-
-.bar:nth-child(47) {
-  height: 103px; }
-
-.bar:nth-child(48) {
-  height: 81px; }
-
-.bar:nth-child(49) {
-  height: 55px; }
-
-.bar:nth-child(50) {
+.bar:nth-child(11) {
   height: 31px; }
 
-.bar:nth-child(51) {
-  height: 49px; }
+.bar:nth-child(12) {
+  height: 70px; }
 
-.bar:nth-child(52) {
-  height: 64px; }
+.bar:nth-child(13) {
+  height: 95px; }
 
-.bar:nth-child(53) {
-  height: 34px; }
+.bar:nth-child(14) {
+  height: 111px; }
 
-.bar:nth-child(54) {
+.bar:nth-child(15) {
   height: 125px; }
 
-.bar:nth-child(55) {
+.bar:nth-child(16) {
+  height: 124px; }
+
+.bar:nth-child(17) {
+  height: 64px; }
+
+.bar:nth-child(18) {
+  height: 117px; }
+
+.bar:nth-child(19) {
+  height: 91px; }
+
+.bar:nth-child(20) {
+  height: 113px; }
+
+.bar:nth-child(21) {
+  height: 104px; }
+
+.bar:nth-child(22) {
+  height: 97px; }
+
+.bar:nth-child(23) {
   height: 34px; }
 
+.bar:nth-child(24) {
+  height: 39px; }
+
+.bar:nth-child(25) {
+  height: 34px; }
+
+.bar:nth-child(26) {
+  height: 48px; }
+
+.bar:nth-child(27) {
+  height: 38px; }
+
+.bar:nth-child(28) {
+  height: 101px; }
+
+.bar:nth-child(29) {
+  height: 88px; }
+
+.bar:nth-child(30) {
+  height: 100px; }
+
+.bar:nth-child(31) {
+  height: 63px; }
+
+.bar:nth-child(32) {
+  height: 38px; }
+
+.bar:nth-child(33) {
+  height: 90px; }
+
+.bar:nth-child(34) {
+  height: 75px; }
+
+.bar:nth-child(35) {
+  height: 26px; }
+
+.bar:nth-child(36) {
+  height: 58px; }
+
+.bar:nth-child(37) {
+  height: 36px; }
+
+.bar:nth-child(38) {
+  height: 63px; }
+
+.bar:nth-child(39) {
+  height: 62px; }
+
+.bar:nth-child(40) {
+  height: 32px; }
+
+.bar:nth-child(41) {
+  height: 63px; }
+
+.bar:nth-child(42) {
+  height: 59px; }
+
+.bar:nth-child(43) {
+  height: 106px; }
+
+.bar:nth-child(44) {
+  height: 57px; }
+
+.bar:nth-child(45) {
+  height: 29px; }
+
+.bar:nth-child(46) {
+  height: 75px; }
+
+.bar:nth-child(47) {
+  height: 88px; }
+
+.bar:nth-child(48) {
+  height: 83px; }
+
+.bar:nth-child(49) {
+  height: 100px; }
+
+.bar:nth-child(50) {
+  height: 123px; }
+
+.bar:nth-child(51) {
+  height: 118px; }
+
+.bar:nth-child(52) {
+  height: 61px; }
+
+.bar:nth-child(53) {
+  height: 121px; }
+
+.bar:nth-child(54) {
+  height: 23px; }
+
+.bar:nth-child(55) {
+  height: 84px; }
+
 .bar:nth-child(56) {
-  height: 80px; }
+  height: 104px; }
 
 .bar:nth-child(57) {
-  height: 62px; }
+  height: 111px; }
 
 .bar:nth-child(58) {
   height: 93px; }
 
 .bar:nth-child(59) {
-  height: 93px; }
+  height: 103px; }
 
 .bar:nth-child(60) {
-  height: 50px; }
+  height: 40px; }
 
 .bar:nth-child(61) {
-  height: 29px; }
+  height: 32px; }
 
 .bar:nth-child(62) {
-  height: 120px; }
-
-.bar:nth-child(63) {
-  height: 79px; }
-
-.bar:nth-child(64) {
   height: 50px; }
 
-.bar:nth-child(65) {
-  height: 73px; }
-
-.bar:nth-child(66) {
+.bar:nth-child(63) {
   height: 44px; }
 
+.bar:nth-child(64) {
+  height: 25px; }
+
+.bar:nth-child(65) {
+  height: 85px; }
+
+.bar:nth-child(66) {
+  height: 121px; }
+
 .bar:nth-child(67) {
-  height: 63px; }
+  height: 26px; }
 
 .bar:nth-child(68) {
-  height: 118px; }
+  height: 80px; }
 
 .bar:nth-child(69) {
-  height: 60px; }
+  height: 31px; }
 
 .bar:nth-child(70) {
-  height: 113px; }
+  height: 49px; }
 
 .bar:nth-child(71) {
-  height: 70px; }
+  height: 99px; }
 
 .bar:nth-child(72) {
-  height: 65px; }
+  height: 80px; }
 
 .bar:nth-child(73) {
-  height: 72px; }
+  height: 103px; }
 
 .bar:nth-child(74) {
-  height: 124px; }
+  height: 70px; }
 
 .bar:nth-child(75) {
-  height: 27px; }
+  height: 99px; }
 
 .bar:nth-child(76) {
-  height: 120px; }
+  height: 96px; }
 
 .bar:nth-child(77) {
-  height: 41px; }
+  height: 71px; }
 
 .bar:nth-child(78) {
-  height: 72px; }
+  height: 78px; }
 
 .bar:nth-child(79) {
-  height: 38px; }
+  height: 88px; }
 
 .bar:nth-child(80) {
-  height: 34px; }
+  height: 17px; }
 
 @media screen and (max-width: 790px) {
   .intro {
