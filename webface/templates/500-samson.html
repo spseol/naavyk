@@ -1,0 +1,63 @@
+{% extends "base.html.j2" %}
+
+{%- block title -%}{{e.code}}: {{e.name}}{%- endblock -%}
+
+{%- block endhead -%}
+<style type="text/css">
+  img {
+    float: left;
+    width: 40%;
+    margin-right: 20px; 
+  }
+  .right {
+    text-align: right;
+    margin-right: 10%;
+  }
+  hr {
+    clear: both;
+  }
+  .prevzato {
+    margin: 1%;
+    padding: 1%;
+    font-size: 90%;
+    color: #777;
+
+  }
+</style>
+{%- endblock -%}
+
+{%- block hlavicka -%} {%- endblock -%}
+
+{%- block body -%}
+<a href="https://cs.wikipedia.org/wiki/Samson_(biblick%C3%A1_postava)">
+  <img src="{{url_for('static', filename='samson.jpg')}}" alt="CRASH" />
+</a>
+
+<h1>500<br />Interní běhová chyba</h1>
+
+  <p><code>{{request.url}}</code></p>
+
+<p>Chyba je tentokrát na straně serveru -- tedy u nás. 
+Budeme moc rádi, když nám popíšete, jak k tomuto stavu došlo, abychom
+to mohli opravit. Nejlepší způsob jak to udělat je napsat 
+<a href="https://github.com/spseol/naavyk/issues/new">Issue</a>.</p>
+
+
+  <hr />
+
+  <div class="prevzato">
+    {%- filter markdown -%}
+Obrázek převzat z hezkého článku
+[Lessons from Samson’s life](http://www.pcbc.org/jeffsblog/?p=349").
+
+Lekce ze Samsonova žívota:
+
+1. Skutečná hodnota člověka není v jeho fyzické síle nebo vzhledu.
+2. Naše největší síla může být často zdrojem naší největší slabosti.
+3. Pevnost v jedné oblasti našeho života neznamená, že neselháváme v jiné.
+4. Jen když uznáme svou náklonost k určitému hříchu, můžeme s ním začít bojovat.
+5. Neposlušnost má vždy následky. (Gal 6,7)
+6. Bůh může obnovit náš život pro své plány, i když jsme předtím selhali.
+    {%- endfilter -%}
+  </div>
+{%- endblock body -%}

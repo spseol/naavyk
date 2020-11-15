@@ -14,7 +14,9 @@ app.config.from_object("config")
 app.config.from_pyfile("config.py", silent=True)
 
 pony = Pony(app)
-misaka = Misaka(app, escape=True)
+misaka = Misaka(
+    app, escape=True, autolink=True, highlight=True, strikethrough=True
+)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"  # funkce pro url_for
 login_manager.login_message = "Nejprve je třeba se přihlásit :-)"

@@ -404,4 +404,12 @@ def page_not_found(error):
     # print(error.code)
     # print(error.name)
     # print(error.description)
-    return render_template("404.html", e=error), 404
+    return render_template("404-samson.html", e=error), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    # print(error.code)
+    # print(error.name)
+    # print(error.description)
+    return render_template("500-samson.html", e=error), 500
