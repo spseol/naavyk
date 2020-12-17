@@ -39,16 +39,31 @@
 <div class="groups">
 {%- for g in groups %}
 <form method="POST">
-  <dl class="group group-{{'enable' if g.enable else 'disable'}}">
+  <dl class="group group-{{'enable' if g.enable else 'disable'}} group-{{'' if g.lock else 'un'}}lock">
     <dt>{{g.name}} <a href="{{ url_for('item_in_group', gid=g.id) }}">🚀</a></dt>
     {%- if g.description  %}
     <dd>{{g.description}}</dd>
     {%- endif %}
+    <dd>Stav: {% if g.enable -%}povoleno{%- else -%}zakázáno{%- endif -%}, 
+              {% if g.lock -%}zamknuto{%- else -%}odemknuto{%- endif -%}
+    </dd>
+    <dd style="font-size: 222%;">
+      {% if g.enable %}✔{% else %}❌{% endif %} 
+      {% if g.lock %}🔏 🤐{% else %}✍ 🤔{% endif %}
+    </dd>
     <dd>
       {{edform.csrf_token(id=False)}}
       {{edform.group_id(value=g.id, id=False)}}
-      {{edform.enable(id=False)}}
-      {{edform.disable(id=False)}}
+      {% if g.enable %}
+        {{edform.disable(id=False)}}
+      {% else %}
+        {{edform.enable(id=False)}}
+      {% endif %}
+      {% if g.lock %}
+        {{edform.unlock(id=False)}}
+      {% else %}
+        {{edform.lock(id=False)}}
+      {% endif %}
       {{edform.remove(id=False, class="remove")}}
     </dd>
   </dl>

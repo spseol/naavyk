@@ -26,6 +26,9 @@ updateClick = function(event) {
             setTimeout(function() {
                 $('#donedone').remove();
             }, 801);
+        },
+        error: function() {
+          location.reload();
         }
     });
 };
@@ -68,7 +71,7 @@ $( document ).ready(function() {
           {{ form.count(type="number", value=counts.get(item.id) or 0, min=0, max=777, 
                         style="width: 4em;", class="count", id=False) }}
         </li>
-        <li>{{ form.update(id=False, class="update") }}<li>
+        <li>{{ form.update(id=False, class="update", disabled=group.lock) }}<li>
       </ul>
     </section>    
     <section class=item-item-2>    

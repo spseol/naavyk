@@ -80,8 +80,10 @@ class GroupEdit(FlaskForm):
 
     # group_id = HiddenField("group_id", validators=[DataRequired()])
     group_id = HiddenField("group_id")
-    enable = SubmitField("Povolit")
-    disable = SubmitField("Zakázat")
+    enable = SubmitField("Povolit ✓")
+    disable = SubmitField("Zakázat ✗")
+    lock = SubmitField("Zamknout 🔒")
+    unlock = SubmitField("Odemknout 🔓")
     remove = SubmitField("Smazat")
 
 

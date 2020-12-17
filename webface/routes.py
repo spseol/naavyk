@@ -138,7 +138,7 @@ def group():
                 "error",
             )
         else:
-            Group(name=name, description=description, enable=True)
+            Group(name=name, description=description, enable=True, lock=False)
             flash("Skupina >{}< byla přidána".format(name))
         return redirect(url_for("group"))
 
@@ -148,6 +148,10 @@ def group():
             Group[edform.group_id.data].enable = True
         if edform.disable.data:
             Group[edform.group_id.data].enable = False
+        if edform.lock.data:
+            Group[edform.group_id.data].lock = True
+        if edform.unlock.data:
+            Group[edform.group_id.data].lock = False
         if edform.remove.data:
             Group[edform.group_id.data].delete()
 
@@ -237,6 +241,13 @@ def order(gid):
         group = Group[gid]
     except ObjectNotFound:
         return abort(404)
+    if not group.enable:
+        flash(
+            "Tato skupina není v tuto chvíli dostupná. "
+            " Platnost stránky vypršela.",
+            "error",
+        )
+        return redirect(url_for("index"))
 
     form = OrderForm()
     if form.validate_on_submit():
@@ -285,6 +296,8 @@ def orderAJAX(gid):
         group = Group[gid]
     except ObjectNotFound:
         return abort(404)
+    if not group.enable:
+        return abort(404)
 
     form = OrderForm()
     if form.validate_on_submit():
@@ -299,9 +312,16 @@ def orderAJAX(gid):
         )
         item_order = ItemOrder.get(order=order, item=item)
         if item_order:
-            item_order.count = count
+            if not group.lock:
+                item_order.count = count
+            else:
+                count = item_order.count
         else:
-            ItemOrder(order=order, item=item, count=count)
+            if not group.lock:
+                ItemOrder(order=order, item=item, count=count)
+            else:
+                ItemOrder(order=order, item=item, count=0)
+                count = 0
 
         items = list(user.orders.select(lambda o: o.group.id == gid))
         # je třeba ošetři případ, kdy ještě zatím není nic objednáno

@@ -57,6 +57,7 @@ class Group(db.Entity):
     id = PrimaryKey(UUID, default=uuid4)
     name = Required(str, unique=True)
     enable = Required(bool)
+    lock = Required(bool)
     description = Optional(str)
     items = Set(Item)
     orders = Set("Order")
