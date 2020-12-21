@@ -68,6 +68,7 @@ class Order(db.Entity):
     id = PrimaryKey(UUID, default=uuid4)
     user = Required(User)
     done = Required(bool)
+    status = Optional(str)
     items = Set("ItemOrder")
     group = Required(Group)
 
