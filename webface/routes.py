@@ -37,6 +37,15 @@ from unicodedata import normalize
 @db_session
 def index():
     groups = Group.select(lambda g: g.enable).sort_by(Group.name)[:]
+    user = User[current_user.id]
+    for index, g in enumerate(groups):
+        items = list(user.orders.select(lambda o: o.group.id == g.id))
+        # je třeba ošetři případ, kdy ještě zatím není nic objednáno
+        items = items[-1].items if items else []
+
+        groups[index].price = pony.sum(i.item.price * i.count for i in items)
+        groups[index].totalcount = pony.count(i for i in items if i.count)
+
     return render_template("base.html.j2", groups=groups)
 
 

@@ -87,7 +87,11 @@
     <ul id="groupsel">
     {% for g in groups  %}
     <li><a href="{{ url_for('order', gid=g.id) }}">{{ g.name }}<br />
-        <span class="description">{{ g.description }}</span></a></li>
+        <span class="description">{{ g.description }}</span>
+        <div class="group-price-count">
+          počet položek: {{g.totalcount}}<br />
+          celková cena: {{g.price}},- Kč</div>
+        </a></li>
     {% endfor %}
     </ul>
 
