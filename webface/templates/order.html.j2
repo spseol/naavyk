@@ -47,7 +47,30 @@ $( document ).ready(function() {
 
 {%block content%}
 <h2><small>Objednávka pro skupinu:</small> {{group.name}}</h2>
+
+{% if group.lock %}
+<p class="lock">🔏 zamknuto, není možné provádět změny 🤐</p>
+{%- endif %}
+
 <p class="group-description">{{ group.description }}</p>
+
+<div style="text-align:center;">
+<h4>Stav objednávky</h4>
+{%- if count > 0 %}
+<ol class="status">
+  {% if status == 'ordered' or status == '' %}{% set ordered='status' %}{% endif %}
+  {% if status == 'paid' %}{% set paid='status' %}{% endif %}
+  {% if status == 'handedover' %}{% set handedover='status' %}{% endif %}
+  <li class="{{ ordered }}">objednáno</li>
+  <li class="{{ paid }}">zaplaceno</li>
+  <li class="{{ handedover }}">předáno</li>
+</ol>
+{%- else %}
+<p style="color: lightgray">Objednávka zatím nebyla vytvořena.</p>
+{%- endif %}
+</div>
+
+
 <section class="item-list">
     {% for item in group.items.order_by(Item.name) %}
     <form method="post">

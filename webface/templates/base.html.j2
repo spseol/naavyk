@@ -36,9 +36,10 @@
     <nav id="topnav">
       <ul>
 
-        <li><a href="{{url_for('index')}}">Objednávka</a></li>
+        <li><a href="{{url_for('index')}}">Moje objednávky</a></li>
         {%- if current_user.is_authenticated %}
           {%- if current_user.admin %}
+          <li><a href="{{url_for('orders')}}" class="admin">Správa objednávek</a></li>
           <li><a href="{{url_for('item')}}" class="admin">Položka</a></li>
           <li><a href="{{url_for('group')}}" class="admin">Skupina</a></li>
           {%- endif %}
@@ -91,6 +92,22 @@
         <div class="group-price-count">
           počet položek: {{g.totalcount}}<br />
           celková cena: {{g.price}},- Kč</div>
+
+        {% if g.lock %}<br/>🔏 zamknuto 🤐{% endif %}
+
+        {%- if g.status != None %}
+        <ol class="status">
+          {% if g.status == 'ordered' or g.status == '' %}{% set ordered='status' %}{% endif %}
+          {% if g.status == 'paid' %}{% set paid='status' %}{% endif %}
+          {% if g.status == 'handedover' %}{% set handedover='status' %}{% endif %}
+          <li class="{{ ordered }}">objednáno</li>
+          <li class="{{ paid }}">zaplaceno</li>
+          <li class="{{ handedover }}">předáno</li>
+        </ol>
+        {%- else %}
+        <p style="color: lightgray">Objednávka zatím nebyla vytvořena.</p>
+        {%- endif %}
+        
         </a></li>
     {% endfor %}
     </ul>

@@ -171,3 +171,14 @@ class OrderForm(FlaskForm):
     # def __init__(self, *args, **kwargs):
     #     self.iid.type = False
     #     self.count.type = False
+
+
+class OrdersListForm(FlaskForm):
+    pass
+
+
+class StatusForm(FlaskForm):
+    """Změna statusu objednávky"""
+
+    oid = StringField("name", validators=[InputRequired()])
+    status = StringField("name", validators=[InputRequired()])

@@ -1,0 +1,141 @@
+{% extends "base.html.j2" %}
+
+{% block endbody %}
+<!--<script src="https://unpkg.com/vue@3.0.4/dist/vue.global.prod.js"></script>-->
+<script src="https://unpkg.com/vue@3.0.4"></script>
+<script>
+const Orders = {
+  delimiters: ['${', '}'],
+  data() {
+    return {
+      orders: [],
+      group: '',
+      user: '',
+      classroom: '',
+      status: '',
+    }
+  },
+  created() {
+    fetch('{{ url_for('ordersAJAXlist') }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'X-CSRF-TOKEN': '{{ordersform.csrf_token._value()}}'
+      },
+      body: JSON.stringify({  }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.orders = data.orders;
+    })
+    /*.catch((error) => {
+      console.error('Error:', error);
+    });*/
+  },
+  computed: {
+    filtered() {
+      let forders = [];
+      this.orders.forEach(o => {
+        if (o.classroom.toLowerCase().includes(this.classroom.toLowerCase()) 
+            && o.user.toLowerCase().includes(this.user.toLowerCase())
+            && o.group.toLowerCase().includes(this.group.toLowerCase())
+            && o.status.toLowerCase().includes(this.status.toLowerCase())
+        ) {
+          forders.push(o);
+        }
+      });
+      return forders;
+    }
+  },
+  methods: {
+    action(status, oid) {
+      console.log(status, oid);
+      fetch('{{ url_for('ordersAJAXstatus') }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+          'X-CSRF-TOKEN': '{{statusform.csrf_token._value()}}'
+        },
+        body: JSON.stringify({ 
+          status: status,
+          oid: oid,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          this.orders.forEach(o => {
+            if (o.order_id == oid ) {
+              o.status = status;
+            } 
+          });
+        };
+      })
+    },
+  }
+}
+
+const app = Vue.createApp(Orders);
+app.mount("#orders")
+</script>
+{% endblock endbody %}
+
+{%block content%}
+<h2>Správa objednávek</h2>
+{#<form method="post" action="{{ url_for('ordersAJAXlist') }}">#}
+{#  {{ form.csrf_token(id=False) }}#}
+{#  <input type="submit">#}
+{#</form>#}
+
+<table id="orders">
+  <tr style="border-bottom-width: 0px;">
+    <th>skupina</th>
+    <th style="width: 5em;">třída</th>
+    <th>jméno</th>
+    <th style="width: 5em;">počet položek</th>
+    <th style="width: 9em;">celková cena</th>
+    <th style="width: 6em;">stav</th>
+    <th style="width: 6em;">přepnout stav na ...</th>
+  </tr>
+  <tr>
+    <th><input type="text" v-model="group" placeholder="filtrovat" /></th>
+    <th><input type="text" v-model="classroom" placeholder="filtrovat"  style="width: 5em;" /></th>
+    <th><input type="text" v-model="user" placeholder="filtrovat" /></th>
+    <th></th>
+    <th></th>
+    <th>
+      <select v-model="status">
+        <!-- inline object literal -->
+        <option :value="''">-</option>
+        <option :value="'ordered'">objednáno</option>
+        <option :value="'paid'">zaplaceno</option>
+        <option :value="'handedover'">předáno</option>
+      </select> 
+    <th> </th>
+  </tr>
+  <tr v-for="order in filtered">
+    <td>${ order.group }</td>
+    <td>${ order.classroom }</td>
+    <td>${ order.user }</td>
+    <td>${ order.itemcount }</td>
+    <td>${ order.totalprice },- Kč</td>
+    <td v-if="order.status == 'ordered' || order.status == ''">objednáno</td>
+    <td v-if="order.status == 'paid'">zaplaceno</td>
+    <td v-if="order.status == 'handedover'">předáno</td>
+    <td v-if="order.status == 'ordered' || order.status == ''">
+      <button @click="action('paid', order.order_id)">➡ zaplaceno</button>
+    </td>
+    <td v-if="order.status == 'paid'">
+      <button @click="action('ordered', order.order_id)">⬅ objednáno</button>
+      <button @click="action('handedover', order.order_id)">➡ předáno</button>
+    </td>
+    <td v-if="order.status == 'handedover'">
+      <button @click="action('paid', order.order_id)">⬅ zaplaceno</button>
+      <button @click="action('done', order.order_id)">➡ ukončeno</button>
+    </td>
+  </tr>
+
+</table>
+
+
+{%endblock content%}

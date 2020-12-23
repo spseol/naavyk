@@ -24,6 +24,8 @@ from .forms import (
     ItemOperation,
     ItemEdit,
     OrderForm,
+    OrdersListForm,
+    StatusForm,
 )
 from .models import User, Group, Item, Order, ItemOrder, Classroom
 from pony.orm import db_session, ObjectNotFound
@@ -45,6 +47,12 @@ def index():
 
         groups[index].price = pony.sum(i.item.price * i.count for i in items)
         groups[index].totalcount = pony.count(i for i in items if i.count)
+
+        order = user.orders.select(lambda o: o.group.id == g.id)
+        if order and groups[index].totalcount != 0:
+            groups[index].status = list(order)[-1].status
+        else:
+            groups[index].status = None
 
     return render_template("base.html.j2", groups=groups)
 
@@ -132,6 +140,7 @@ def logout():
 @login_required
 @db_session
 def group():
+    "Seznam skupin. Skupiny lze vytvářet, mazat, povolovat a zamykat"
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
         return redirect(url_for("index"))
@@ -174,6 +183,7 @@ def group():
 @login_required
 @db_session
 def item():
+    "Vložení nové položky (zboží)."
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
         return redirect(url_for("index"))
@@ -210,6 +220,7 @@ def item():
 @login_required
 @db_session
 def item_in_group(gid):
+    """Výpis všech položek ve skupině s možností editace a smazání."""
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
         return redirect(url_for("index"))
@@ -227,6 +238,8 @@ def item_in_group(gid):
 @login_required
 @db_session
 def item_in_group_POST(gid):
+    """Smazání položky.
+    Editace se řeší AJAXem pomocí funkce itemedit."""
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
         return redirect(url_for("index"))
@@ -242,10 +255,70 @@ def item_in_group_POST(gid):
     return redirect(url_for("item_in_group", gid=gid))
 
 
+@app.route("/item/<uuid:iid>", methods=["GET", "POST"])
+@login_required
+@db_session
+def itemedit(iid):
+    """Editace položky. Slouží pro AJAX požadavky.
+    GET vrátí HTML s formulářem. Slouží pro AJAX fetch
+    POST se také volá AJAXem a slouží pro změny
+    JS kód je v item_in_group.html.j2"""
+    if not current_user.admin:
+        flash("Nemáš dostatečná oprávnění!")
+        return abort(403)
+        return redirect(url_for("index"))
+    try:
+        item = Item[iid]
+    except ObjectNotFound:
+        return abort(404)
+    form = ItemEdit()
+    if request.method == "GET":
+        form.name.data = item.name
+        form.description.data = item.description
+        form.url.data = item.url
+        form.price.data = item.price
+        form.necessary.data = item.necessary
+        form.recommended.data = item.recommended
+        form.groups.data = [str(g.id) for g in item.groups]
+        # print(form.groups.data)
+        return render_template("itemedit.html.j2", form=form, item=item)
+    elif request.method == "POST":
+        if form.validate():
+            if form.imgdata.data:
+                f = form.imgdata.data
+                item.imgdata = bytes(f.read())
+                item.imgtype = f.mimetype
+                image = True
+            else:
+                image = False
+            item.name = form.name.data
+            item.description = form.description.data
+            item.url = form.url.data
+            item.price = int(form.price.data)
+            item.necessary = form.necessary.data
+            item.recommended = form.recommended.data
+            for gid in form.groups.data:
+                item.groups += [Group[gid]]
+            return jsonify(
+                name=item.name,
+                description=item.description,
+                url=item.url,
+                price=item.price,
+                necessary=item.necessary,
+                recommended=item.recommended,
+                image=image,
+            )
+        else:
+            print(form.errors)
+            return jsonify(form.errors), 400
+
+
 @app.route("/order/<uuid:gid>", methods=["GET", "POST"])
 @login_required
 @db_session
 def order(gid):
+    """Objednávka. Ukazuje a aktualizuje počty objednaných položek.
+    Funguje i bez AJAXu, ale AJAX funguje také pomocí funkce orderAJAX. """
     try:
         group = Group[gid]
     except ObjectNotFound:
@@ -285,6 +358,10 @@ def order(gid):
         counts[i.item.id] = i.count
     price = pony.sum(i.item.price * i.count for i in items)
     count = pony.count(i for i in items if i.count)
+    order = (
+        Order.get(user=user, group=group)
+        or Order(user=user, group=group, done=False),
+    )
 
     return render_template(
         "order.html.j2",
@@ -294,6 +371,7 @@ def order(gid):
         form=form,
         price=price,
         count=count,
+        status=list(order)[-1].status,
     )
 
 
@@ -344,58 +422,79 @@ def orderAJAX(gid):
         return abort(405)
 
 
-@app.route("/item/<uuid:iid>", methods=["GET", "POST"])
+@app.route("/orders/", methods=["GET"])
 @login_required
-@db_session
-def itemedit(iid):
+def orders():
+    """Seznam objednávek. SPA -> ordersAJAXlist
+    Objednávky se dají označit jako zaplacené, vydané, hotové."""
     if not current_user.admin:
         flash("Nemáš dostatečná oprávnění!")
         return abort(403)
-        return redirect(url_for("index"))
-    try:
-        item = Item[iid]
-    except ObjectNotFound:
-        return abort(404)
-    form = ItemEdit()
-    if request.method == "GET":
-        form.name.data = item.name
-        form.description.data = item.description
-        form.url.data = item.url
-        form.price.data = item.price
-        form.necessary.data = item.necessary
-        form.recommended.data = item.recommended
-        form.groups.data = [str(g.id) for g in item.groups]
-        # print(form.groups.data)
-        return render_template("itemedit.html.j2", form=form, item=item)
-    elif request.method == "POST":
-        if form.validate():
-            if form.imgdata.data:
-                f = form.imgdata.data
-                item.imgdata = bytes(f.read())
-                item.imgtype = f.mimetype
-                image = True
-            else:
-                image = False
-            item.name = form.name.data
-            item.description = form.description.data
-            item.url = form.url.data
-            item.price = int(form.price.data)
-            item.necessary = form.necessary.data
-            item.recommended = form.recommended.data
-            for gid in form.groups.data:
-                item.groups += [Group[gid]]
-            return jsonify(
-                name=item.name,
-                description=item.description,
-                url=item.url,
-                price=item.price,
-                necessary=item.necessary,
-                recommended=item.recommended,
-                image=image,
-            )
-        else:
-            print(form.errors)
-            return jsonify(form.errors), 400
+    ordersform = OrdersListForm()
+    statusform = StatusForm()
+    return render_template(
+        "orders.html.j2", ordersform=ordersform, statusform=statusform
+    )
+
+
+@app.route("/ordersAJAX/list/", methods=["POST"])
+@login_required
+@db_session
+def ordersAJAXlist():
+    if not current_user.admin:
+        return abort(403)
+    form = OrdersListForm()
+    if not form.validate_on_submit():
+        abort(400)
+    orders = pony.select(
+        (
+            o,
+            pony.count(i for i in o.items if i.count > 0),
+            pony.sum(o.items.item.price * o.items.count),
+        )
+        for o in Order
+        if pony.sum(o.items.item.price * o.items.count) > 0
+    ).sort_by(
+        lambda o, c, s: (
+            o.status,
+            o.group.name,
+            o.user.classroom.name,
+            o.user.name,
+        )
+    )
+    result = []
+    for o, c, s in orders:
+        one = dict()
+        one["status"] = o.status if o.status else "ordered"
+        one["order_id"] = o.id
+        one["group_id"] = o.group.id
+        one["group"] = o.group.name
+        one["user"] = o.user.name
+        one["classroom"] = o.user.classroom.name
+        one["totalprice"] = s
+        one["itemcount"] = c
+        result.append(one)
+    return jsonify(orders=result)
+
+
+@app.route("/ordersAJAX/status/", methods=["POST"])
+@login_required
+@db_session
+def ordersAJAXstatus():
+    if not current_user.admin:
+        return abort(403)
+    status = request.json.get("status")
+    oid = request.json.get("oid")
+    order = Order.get(id=oid)
+    if not order:
+        abort(404)
+    if status in ("ordered", "paid", "handedover", "done"):
+        order.status = status
+    else:
+        return abort(400)
+    if status == "ordered":
+        pass
+    return jsonify(True)
 
 
 ############################################################################

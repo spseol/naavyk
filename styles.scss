@@ -228,6 +228,35 @@ dd {
     }
 }
 
+.lock {
+    color: red;
+    font-size: 130%;
+    text-align: center;
+}
+
+table#orders {
+    table-layout: auto;
+    width: 100%;
+
+    tr {
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover {
+        background-color: gold;
+    }
+    th {
+        font-weight: bold;
+    }
+    td {
+        padding: 0.5ex 2ex;
+    }
+} 
+
+
+.header {
+    border-bottom-width: 0px;
+}
+
 .logout {
     @include fancy-button(lighten(cs-tertiary(), 30), 25, 15px, 0px);
     padding: 8px 10px;
@@ -396,11 +425,26 @@ footer {
     a:hover {
         background-color: cs-secondary();
     }
-    li {
+    > li {
         width: 27%;
         display: inline-block;
         margin: 1em;
         list-style-type: none;
+    }
+}
+
+ol.status {
+    margin-top: 1ex;
+    display: inline-block;
+    li {
+        display: inline-list-item;
+        width: 12ex;
+        list-style-type: decimal;
+        margin-left: 2ex;
+        color: rgba(128,128,128,0.6);
+    }
+    li.status {
+        color: inherit;
     }
 }
 
