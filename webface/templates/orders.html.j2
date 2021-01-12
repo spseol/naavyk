@@ -1,8 +1,8 @@
 {% extends "base.html.j2" %}
 
 {% block endbody %}
-<!--<script src="https://unpkg.com/vue@3.0.4/dist/vue.global.prod.js"></script>-->
-<script src="https://unpkg.com/vue@3.0.4"></script>
+<script src="https://unpkg.com/vue@3.0.4/dist/vue.global.prod.js"></script>
+<!--<script src="https://unpkg.com/vue@3.0.4"></script>-->
 <script>
 const Orders = {
   delimiters: ['${', '}'],
@@ -13,6 +13,10 @@ const Orders = {
       user: '',
       classroom: '',
       status: '',
+      group_url: {{ url_for('group') }},
+      fcount: 0,
+      allcount: 0,
+      allprice: 0,
     }
   },
   created() {
@@ -34,6 +38,9 @@ const Orders = {
   },
   computed: {
     filtered() {
+      this.allcount = 0;
+      this.allprice = 0;
+      this.fcount = 0;
       let forders = [];
       this.orders.forEach(o => {
         if (o.classroom.toLowerCase().includes(this.classroom.toLowerCase()) 
@@ -41,6 +48,9 @@ const Orders = {
             && o.group.toLowerCase().includes(this.group.toLowerCase())
             && o.status.toLowerCase().includes(this.status.toLowerCase())
         ) {
+          this.fcount++;
+          this.allcount += o.itemcount;
+          this.allprice += o.totalprice;
           forders.push(o);
         }
       });
@@ -93,14 +103,16 @@ app.mount("#orders")
     <th style="width: 5em;">třída</th>
     <th>jméno</th>
     <th style="width: 5em;">počet položek</th>
-    <th style="width: 9em;">celková cena</th>
+    <th style="min-width: 7em;">celková cena</th>
+    <th style="min-width: 6em;"></th>
     <th style="width: 6em;">stav</th>
-    <th style="width: 6em;">přepnout stav na ...</th>
+    <th style="min-width: 6em;"></th>
   </tr>
   <tr>
     <th><input type="text" v-model="group" placeholder="filtrovat" /></th>
     <th><input type="text" v-model="classroom" placeholder="filtrovat"  style="width: 5em;" /></th>
     <th><input type="text" v-model="user" placeholder="filtrovat" /></th>
+    <th></th>
     <th></th>
     <th></th>
     <th>
@@ -114,25 +126,47 @@ app.mount("#orders")
     <th> </th>
   </tr>
   <tr v-for="order in filtered">
-    <td>${ order.group }</td>
+    <td>${ order.group } <a v-bind:href="group_url+order.group_id">🚀</a></td>
     <td>${ order.classroom }</td>
-    <td>${ order.user }</td>
+    <td>${ order.user }<a v-bind:href="order.order_id">🚀</a></td>
     <td>${ order.itemcount }</td>
     <td>${ order.totalprice },- Kč</td>
-    <td v-if="order.status == 'ordered' || order.status == ''">objednáno</td>
-    <td v-if="order.status == 'paid'">zaplaceno</td>
-    <td v-if="order.status == 'handedover'">předáno</td>
-    <td v-if="order.status == 'ordered' || order.status == ''">
-      <button @click="action('paid', order.order_id)">➡ zaplaceno</button>
+    <td>
+      <span v-if="order.status == 'paid'">
+        <button @click="action('ordered', order.order_id)">⬅ objednáno</button>
+      </span>
+      <span v-if="order.status == 'handedover'">
+        <button @click="action('paid', order.order_id)">⬅ zaplaceno</button>
+      </span>
     </td>
-    <td v-if="order.status == 'paid'">
-      <button @click="action('ordered', order.order_id)">⬅ objednáno</button>
-      <button @click="action('handedover', order.order_id)">➡ předáno</button>
+    <td>
+      <span v-if="order.status == 'ordered' || order.status == ''">objednáno</span>
+      <span v-if="order.status == 'paid'">zaplaceno</span>
+      <span v-if="order.status == 'handedover'">předáno</span>
     </td>
-    <td v-if="order.status == 'handedover'">
-      <button @click="action('paid', order.order_id)">⬅ zaplaceno</button>
-      <button @click="action('done', order.order_id)">➡ ukončeno</button>
+    <td>
+      <span v-if="order.status == 'ordered' || order.status == ''">
+        <button @click="action('paid', order.order_id)">➡ zaplaceno</button>
+      </span>
+      <span v-if="order.status == 'paid'">
+        <button @click="action('handedover', order.order_id)">➡ předáno</button>
+      </span>
+      <span v-if="order.status == 'handedover'">
+        <button @click="action('done', order.order_id)">➡ ukončeno</button>
+      </span>
     </td>
+
+  </tr>
+
+  <tr style="background-color: lightgray; border-top: solid 3px black;">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Celkem:</td>
+    <td>${ allcount }</td>
+    <td>${ allprice },- Kč</td>
+    <td>&nbsp;</td>
+    <td>Počet zobrazených řádků:</td>
+    <td>${ fcount }</td>
   </tr>
 
 </table>

@@ -1,0 +1,72 @@
+{% extends "base.html.j2" %}
+
+{% block endbody %}
+{% endblock endbody %}
+
+{%block content%}
+<h2><small style="color:black;">Detail objednávky:</small><br />
+  {{ order.user.name  }} | {{ order.user.classroom.name  }}</h2>
+
+
+<div style="text-align:center; font-size:110%;">
+  <p>
+  Počet položek: <strong>{{ totalcount }}</strong> ks.
+  Celková cena: <strong>{{ totalprice }},-</strong> Kč.
+  </p>
+  <ol class="status">
+    {% set status = order.status %}
+    {% if status == 'ordered' or status == '' %}{% set ordered='status' %}{% endif %}
+    {% if status == 'paid' %}{% set paid='status' %}{% endif %}
+    {% if status == 'handedover' %}{% set handedover='status' %}{% endif %}
+    <li class="{{ ordered }}">objednáno</li>
+    <li class="{{ paid }}">zaplaceno</li>
+    <li class="{{ handedover }}">předáno</li>
+  </ol>
+</div>
+
+
+<p class="group-description">
+Skupina <a href="{{ url_for('item_in_group', gid=order.group.id) }}">{{order.group.name}}</a>:<br />
+{{ order.group.description }}
+</p>
+
+
+<section class="item-list">
+    {% for i in items %}
+    {% set item = i.item%}
+    <h3>{{item.name}}</h3>
+    <section class="item-item-1">
+      <p class="item-img">
+        {#<img src="{{ url_for('img', iid=item.item.id) }}" class="zoomable" alt="">#}
+        <img src="data:{{item.imgtype}};base64,{{item.imgdata|b64e}}" class="zoomable" alt="">
+      </p>
+      <div class="item-dsc">{{ item.description | markdown }}</div>
+      <ul>
+        {% if item.necessary %}
+          <li class="necessary">Nezbytný</li>
+        {% endif %}
+        {% if item.recommended %}
+          <li class="recommended">Doporučený</li>
+        {% endif %}
+        <li>{{ item.price }},- Kč</li>
+        <li><strong>Počet: {{i.count}} </strong></li>
+      </ul>
+    </section>    
+    <section class=item-item-2>    
+      <p>Cena: <strong>{{ item.price }}</strong>,- Kč</p>
+      <p>{% if item.url %}
+        Adresa: {{ item.url | urlize(59,target='_blank')}}
+      {% endif %}
+      </p>
+      </section>    
+      <hr />
+    {% endfor %}
+</section>    
+
+<p id="total-info">
+  Celková cena: <strong id="total-price">{{ totalprice }},-</strong> Kč <br />
+  Počet položek: <strong id="total-count">{{ totalcount }}</strong> <br />
+</p>
+
+
+{%endblock content%}

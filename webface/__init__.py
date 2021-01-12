@@ -7,11 +7,17 @@ from flask_misaka import Misaka
 from flask_wtf.csrf import CSRFProtect
 from flask_uuid import FlaskUUID
 from pony.orm import set_sql_debug
+from base64 import b64encode
+
+
+def b64e(data):
+    return b64encode(data).decode("ascii")
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object("config")
 app.config.from_pyfile("config.py", silent=True)
+app.add_template_filter(b64e)
 
 pony = Pony(app)
 misaka = Misaka(

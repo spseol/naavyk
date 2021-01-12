@@ -79,7 +79,8 @@ $( document ).ready(function() {
     <h3>{{item.name}}</h3>
     <section class="item-item-1">
       <p class="item-img">
-        <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
+        {#<img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">#}
+        <img src="data:{{item.imgtype}};base64;base64,{{item.imgdata|b64e}}" class="zoomable" alt="">
       </p>
       <div class="item-dsc">{{ item.description | markdown }}</div>
       <ul>

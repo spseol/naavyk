@@ -28,7 +28,7 @@ from .forms import (
     StatusForm,
 )
 from .models import User, Group, Item, Order, ItemOrder, Classroom
-from pony.orm import db_session, ObjectNotFound
+from pony.orm import db_session, ObjectNotFound, desc
 import pony.orm as pony
 from ldap3 import Server, Connection, ALL, NTLM
 from unicodedata import normalize
@@ -226,9 +226,85 @@ def item_in_group(gid):
         return redirect(url_for("index"))
     try:
         group = Group[gid]
+        items = group.items.order_by(Item.name)
+        # počty položek v jednotlivých skupinách
+        counts = [dict() for _ in range(len(items))]
+        for index, item in enumerate(items):
+            counts[index]["users"] = []
+            counts[index]["users_"] = []
+            for io in item.orders.sort_by(
+                lambda io: (
+                    desc(io.order.status),
+                    io.order.group.name,
+                    io.order.user.classroom.name,
+                    io.order.user.name,
+                )
+            ):
+                if io.count > 0:
+                    if io.order.group == group:
+                        counts[index]["users"].append(
+                            (
+                                io.order.user.classroom.name,
+                                io.order.user.name,
+                                io.order.status,
+                                io.order.id,
+                                io.count,
+                            )
+                        )
+                    else:
+                        counts[index]["users_"].append(
+                            (
+                                io.order.user.classroom.name,
+                                io.order.user.name,
+                                io.order.status,
+                                io.order.id,
+                                io.count,
+                                io.order.group.name,
+                            )
+                        )
+
+            # status == ordered
+            counts[index]["ordered"] = pony.sum(
+                io.count
+                for io in item.orders
+                if io.order.status in ("ordered", "")
+                and io.order.group == group
+            )
+            # status == ordered -- napříč skupinami
+            counts[index]["ordered_"] = pony.sum(
+                io.count
+                for io in item.orders
+                if io.order.status in ("ordered", "")
+            )
+            # status == paid
+            counts[index]["paid"] = pony.sum(
+                io.count
+                for io in item.orders
+                if io.order.status == "paid" and io.order.group == group
+            )
+            # status == paid -- napříč skupinami
+            counts[index]["paid_"] = pony.sum(
+                io.count for io in item.orders if io.order.status == "paid"
+            )
+            # status == handedover
+            counts[index]["handedover"] = pony.sum(
+                io.count
+                for io in item.orders
+                if io.order.status == "handedover" and io.order.group == group
+            )
+            # status == handedover  -- napříč skupinami
+            counts[index]["handedover_"] = pony.sum(
+                io.count
+                for io in item.orders
+                if io.order.status == "handedover"
+            )
         opform = ItemOperation()
         return render_template(
-            "item_in_group.html.j2", group=group, opform=opform, Item=Item
+            "item_in_group.html.j2",
+            group=group,
+            items=items[:],
+            counts=counts,
+            opform=opform,
         )
     except ObjectNotFound:
         return abort(404)
@@ -497,6 +573,29 @@ def ordersAJAXstatus():
     return jsonify(True)
 
 
+@app.route("/orders/<uuid:oid>", methods=["GET"])
+@login_required
+@db_session
+def order_detail(oid):
+    """Detail každé jedné objednávky"""
+    if not current_user.admin:
+        flash("Nemáš dostatečná oprávnění!")
+        return abort(403)
+    order = Order.get(id=oid)
+    if not order:
+        return abort(404)
+    items = order.items.select(lambda io: io.count > 0).sort_by(
+        lambda io: io.item.name
+    )
+    return render_template(
+        "order_detail.html.j2",
+        items=items,
+        order=order,
+        totalcount=pony.count(io for io in items if io.count),
+        totalprice=pony.sum(io.item.price * io.count for io in items),
+    )
+
+
 ############################################################################
 
 
@@ -510,7 +609,10 @@ def ordersAJAXstatus():
 @login_required
 @db_session
 def img(iid):
-    item = Item[iid]
+    try:
+        item = Item[iid]
+    except ObjectNotFound:
+        return abort(404)
     response = make_response(item.imgdata)
     response.headers.set("Content-Type", item.imgtype)
     response.headers.set(

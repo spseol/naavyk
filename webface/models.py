@@ -50,7 +50,7 @@ class Item(db.Entity):
     price = Required(int)
     necessary = Required(bool)
     recommended = Required(bool)
-    orderes = Set("ItemOrder")
+    orders = Set("ItemOrder")
 
 
 class Group(db.Entity):

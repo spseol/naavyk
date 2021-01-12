@@ -74,6 +74,10 @@ body {
     line-height: normal;
     padding: 0px 20px;
 }
+sup {
+    vertical-align: super;
+    font-size: 70%;
+}
 
 textarea, input {
     font-family: $font_text;
@@ -145,7 +149,7 @@ header {
             background-color: cs-secondary();
         }
         .admin {
-            border-top: solid red 1px;
+            border-top: solid red 3px;
         }
 
     }
@@ -388,13 +392,18 @@ footer {
         color: coral;
     }
 }
+
 .item-item-2 {
     display: flex;
-    p:nth-child(1) {
+    *:nth-child(1) {
         flex: 2;
     }
-    p:nth-child(2) {
+    *:nth-child(2) {
         flex: 5;
+    }
+    .users {
+        max-height: 20em;
+        overflow: auto;
     }
 }
 
@@ -409,6 +418,7 @@ footer {
 }
 
 #groupsel {
+    text-align:center;
     a {
         color: white;
         font-weight: bold;
@@ -426,6 +436,8 @@ footer {
         background-color: cs-secondary();
     }
     > li {
+        text-align:left;
+        min-width: 15em;
         width: 27%;
         display: inline-block;
         margin: 1em;

@@ -91,14 +91,15 @@
 <section class="item-list">
 <h2><small>Položky ve skupině:</small> {{group.name}}</h2>
 <p class="group-description">{{ group.description }}</p>
-    {% for item in group.items.order_by(Item.name) %}
+    {% for item in items %}
     <form method="post">
       {{ opform.csrf_token(id=False) }}
       {{ opform.iid(value=item.id, id=False) }}
     <h3>{{item.name}}</h3>
     <div class="item-item-1">
       <p class="item-img">
-        <img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">
+        {#<img src="{{ url_for('img', iid=item.id) }}" class="zoomable" alt="">#}
+        <img src="data:{{item.imgtype}};base64;base64,{{item.imgdata|b64e}}" class="zoomable" alt="">
       </p>
       <div class="item-dsc">{{ item.description | markdown }}</div>
       <ul class="item-ul">
@@ -118,6 +119,72 @@
       <p>{% if item.url %}
         Adresa: {{ item.url |urlize(64,target="_blank")}}
       {% endif %}</p>
+    </div>    
+
+    <h4>V této skupině</h4>
+    <div class=item-item-2>    
+    <p>celkem: 
+       {{ counts[loop.index0].ordered + counts[loop.index0].paid + counts[loop.index0].handedover }}
+       kusů</p>
+      <ul>
+        <li>zaplaceno:
+            <strong style="color: darkred;">
+              {{ counts[loop.index0].paid }} kusů
+            </strong>(počet kusů k objednání)</li>
+        <li>vydáno: {{ counts[loop.index0].handedover }} kusů</li>
+        <li style="color: gray;">nezaplaceno: <strong>{{ counts[loop.index0].ordered }}</strong> kusů</li>
+      </ul>
+      <div class="users">
+        <h5>Uživatelé</h5>
+        <table>
+        {%- for classroom, name, status, order, count  in  counts[loop.index0].users %}
+          <tr>
+            <td>{{ classroom }}</td>
+            <td>&nbsp;</td>
+            <td>{{name}}</td>
+            <td>&nbsp;{{count}}x&nbsp;</td>
+            <td>
+            {%- if status == 'paid'  %}💰
+            {%- elif status == 'handedover'  %}🤲
+            {%- else %}😛{%- endif %}
+            </td>
+            <td><a href="{{ url_for('order_detail', oid=order) }}">🚀</a></td>
+          </tr>
+        {%- endfor %}
+        </table>
+      </div>
+    </div>    
+
+    <h4>Napříč skupinami</h4>
+    <div class=item-item-2>    
+    <p>celkem: 
+       {{ counts[loop.index0].ordered_ + counts[loop.index0].paid_ + counts[loop.index0].handedover_ }}
+       kusů</p>
+      <ul>
+        <li>zaplaceno: {{ counts[loop.index0].paid_ }} kusů </li>
+        <li>vydáno: {{ counts[loop.index0].handedover_ }} kusů</li>
+        <li style="color: gray;">nezaplaceno: <strong>{{ counts[loop.index0].ordered_ }}</strong> kusů</li>
+      </ul>
+      <div class="users">
+        <h5>Uživatelé v ostatních skupinách</h5>
+        <table>
+        {%- for classroom, name, status, order, count, group  in  counts[loop.index0].users_ %}
+          <tr>
+            <td>({{group}})</td>
+            <td>&nbsp;</td>
+            <td>{{ classroom }}</td>
+            <td>&nbsp;</td>
+            <td>{{name}}</td>
+            <td>&nbsp;{{count}}x&nbsp;</td>
+            <td>
+            {%- if status == 'paid'  %}💰
+            {%- elif status == 'handedover'  %}🤲
+            {%- else %}😛{%- endif %}
+            </td>
+          </tr>
+        {%- endfor %}
+        </table>
+      </div>
     </div>    
       <hr />
     </form>
